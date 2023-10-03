@@ -3,7 +3,7 @@
 
 int main(int argc, char** argv)
 {
-	std::string folder = "..\\plugins";
+	std::string folder = "./plugins";
 	std::string extension = ".dll";
 	Calculator* app = app->getInstance(folder, extension);
 	while (true)

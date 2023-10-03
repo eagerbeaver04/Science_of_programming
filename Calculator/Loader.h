@@ -16,7 +16,7 @@ public:
 		static Loader* instance = new Loader(folder, extension);
 		return instance;
 	}
-	Operator* getOperatorFromDll(std::filesystem::path path);
+	Operator* getOperatorFromDll(const HINSTANCE& load);
 	void loadDll(std::map<std::string, Operator*>& operations, const std::string& folder, const std::string& extension);
 private:
 	std::vector< HINSTANCE> libraries;

@@ -1,29 +1,13 @@
 #include "Loader.h"
 
-Operator* Loader::getOperatorFromDll(std::filesystem::path path)
+Operator* Loader::getOperatorFromDll(const HINSTANCE& load)
 {
-	const wchar_t* widecFileName = path.c_str();
 
-	HINSTANCE load;
-	load = LoadLibrary(widecFileName);
-	this->libraries.push_back(load);
-
-	typedef double (*double_fun_2) (double, double);
-	typedef int (*int_fun) (void);
-	typedef std::string(*str_fun) (void);
-	typedef bool (*bool_fun) (void);
-
-	double_fun_2 Operation;
-	int_fun Binary;
-	int_fun Priority;
-	str_fun Name;
-	bool_fun Associativity;
-
-	Operation = (double_fun_2)GetProcAddress(load, "operation");
-	Binary = (int_fun)GetProcAddress(load, "binary");
-	Priority = (int_fun)GetProcAddress(load, "priority");
-	Name = (str_fun)GetProcAddress(load, "name");
-	Associativity = (bool_fun)GetProcAddress(load, "associativity");
+	std::function<double(double, double)> Operation = (double (*) (double, double))GetProcAddress(load, "operation");
+	std::function<int(void)>  Binary = (int (*) (void))GetProcAddress(load, "binary");
+	std::function<int(void)>  Priority = (int (*) (void))GetProcAddress(load, "priority");
+	std::function<std::string(void)> Name = (std::string (*) (void)) GetProcAddress(load, "name");
+	std::function<bool(void)>  Associativity = (bool (*) (void))GetProcAddress(load, "associativity");
 
 	Operator* op = new Operator(Name(), Priority(), Associativity(), Binary(), Operation);
 
@@ -38,10 +22,23 @@ void Loader::loadDll(std::map<std::string, Operator*>& operation_list, const std
 		if (entry.path().extension() == extension)
 			files.push_back(entry.path().c_str());
 
+	const wchar_t* widecFileName;
+	HINSTANCE load;
+
 	for (const auto& path : files)
 	{
-		Operator* op = getOperatorFromDll(path);
-		operation_list[op->getName()] = op;
+		widecFileName = path.c_str();
+		load = LoadLibrary(widecFileName);
+		this->libraries.push_back(load);
+
+		if (load)
+		{
+			Operator* op = getOperatorFromDll(load);
+			operation_list[op->getName()] = op;
+			continue;
+		}
+
+		std::cerr << "Opening dll file " << path << " failure" << std::endl;
 	}
 
 }
