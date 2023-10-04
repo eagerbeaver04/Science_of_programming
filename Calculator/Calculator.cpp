@@ -15,4 +15,6 @@ int main(int argc, char** argv)
 		app->calculation();
 	}
 
+	return 0;
+
 }

@@ -58,7 +58,7 @@ bool Parser::isLetter(const std::string& symbol)
 
 double Parser::calculation(const std::string& symbol, double a, double b)
 {
-    return this->operations->ñalculation(symbol, a, b);
+    return this->operations->calculation(symbol, a, b);
 }
 
 bool Parser::shuntingYard(const std::string& input, std::string& output)

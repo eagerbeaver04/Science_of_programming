@@ -21,19 +21,16 @@ public:
 			this->parser->executionOrder(this->output);
 	}
 private:
-	Parser* parser;
+	std::unique_ptr<Parser> parser;
 	std::string input;
 	std::string output;
 	Calculator(const std::string& folder, const std::string& extension)
 	{
-		this->parser = new Parser(folder, extension);
+		this->parser = std::make_unique<Parser>(folder, extension);
 		this->input = "";
 		this->output = "";
 	};
-	~Calculator() 
-	{
-		delete parser;
-	};
+	~Calculator() = default;
 	Calculator(const Calculator&);
 	Calculator& operator= (const Calculator&) {};
 };
