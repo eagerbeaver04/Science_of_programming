@@ -33,12 +33,8 @@ public:
 	int getBinary(const std::string& symbol);
 
 	double calculation(const std::string& symbol, double a, double b);
-	~Operations() 
-	{
-		for (auto& op : operations)
-			op.second.reset();
-		operations.clear();
-	}
+	~Operations() = default;
+	Operations(const Operations&) = default;
 private:
 	std::map<std::string, std::unique_ptr<Operator>> operations;
 };

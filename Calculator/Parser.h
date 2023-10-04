@@ -1,5 +1,5 @@
-#ifndef SORTER_H
-#define SORTER_H
+#ifndef PARSER_H
+#define PARSER_H
 
 #include "Operations.h"
 #include <sstream>
@@ -7,18 +7,9 @@
 
 class Parser
 {
-public:
-	bool shuntingYard(const std::string& input, std::string& output);
-	bool executionOrder(const std::string& input);
-	double calculation(const std::string& symbol, double a, double b);
-	Parser(const std::string& folder, const std::string& extension)
-	{
-		this->operations = std::make_unique<Operations>(folder, extension);
-	}
-	~Parser() = default;
 private:
-	std::unique_ptr<Operations> operations;
-	Parser(const Parser&);
+	std::unique_ptr<Operations> operations; 
+
 	int opPriority(const std::string& symbol);
 	bool opAssociativity(const std::string& c);
 	int opBinary(const std::string& symbol);
@@ -29,6 +20,16 @@ private:
 	bool isLetter(char symbol);
 	bool isLetter(const std::string& symbol);
 
+public:
+	bool shuntingYard(const std::string& input, std::string& output);
+	bool executionOrder(const std::string& input);
+	double calculation(const std::string& symbol, double a, double b);
+	Parser(const std::string& folder, const std::string& extension)
+	{
+		this->operations = std::make_unique<Operations>(folder, extension);
+	}
+	~Parser() = default;
+	Parser(const Parser&) = default;
 };
 
 
