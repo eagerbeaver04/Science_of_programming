@@ -32,7 +32,7 @@ public:
 	bool getAssociativity(const std::string& symbol);
 	int getBinary(const std::string& symbol);
 
-	double ñalculation(const std::string& symbol, double a, double b);
+	double calculation(const std::string& symbol, double a, double b);
 	~Operations() 
 	{
 		for (auto& op : operations)

@@ -24,7 +24,7 @@ int Operations::getBinary(const std::string& symbol)
 	return 2;
 }
 
-double Operations::ñalculation(const std::string& symbol, double a, double b)
+double Operations::calculation(const std::string& symbol, double a, double b)
 {
 	if (this->operations.count(symbol) == 1)
 		return this->operations[symbol]->calculation(a,b);
