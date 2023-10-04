@@ -1,6 +1,6 @@
 #include "Loader.h"
 
-Operator* Loader::getOperatorFromDll(const HINSTANCE& load)
+std::unique_ptr<Operator> Loader::getOperatorFromDll(const HINSTANCE& load)
 {
 
 	std::function<double(double, double)> Operation = (double (*) (double, double))GetProcAddress(load, "operation");
@@ -9,12 +9,12 @@ Operator* Loader::getOperatorFromDll(const HINSTANCE& load)
 	std::function<std::string(void)> Name = (std::string (*) (void)) GetProcAddress(load, "name");
 	std::function<bool(void)>  Associativity = (bool (*) (void))GetProcAddress(load, "associativity");
 
-	Operator* op = new Operator(Name(), Priority(), Associativity(), Binary(), Operation);
+	std::unique_ptr<Operator> op = std::make_unique<Operator>(Name(), Priority(), Associativity(), Binary(), Operation);
 
 	return op;
 }
 
-void Loader::loadDll(std::map<std::string, Operator*>& operation_list, const std::string& folder, const std::string& extension)
+void Loader::loadDll(std::map<std::string, std::unique_ptr<Operator>>& operation_list, const std::string& folder, const std::string& extension)
 {
 	std::vector<std::filesystem::path> files;
 
@@ -28,13 +28,13 @@ void Loader::loadDll(std::map<std::string, Operator*>& operation_list, const std
 	for (const auto& path : files)
 	{
 		widecFileName = path.c_str();
-		load = LoadLibrary(widecFileName);
+		load = LoadLibraryW(widecFileName);
 		this->libraries.push_back(load);
 
 		if (load)
 		{
-			Operator* op = getOperatorFromDll(load);
-			operation_list[op->getName()] = op;
+			std::unique_ptr<Operator> op = getOperatorFromDll(load);
+			operation_list[op->getName()] = std::move(op);
 			continue;
 		}
 

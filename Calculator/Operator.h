@@ -8,7 +8,7 @@
 class Operator
 {
 public:
-	Operator(const std::string& name, int priority, bool associativity, int binary, std::function<double(double, double)> operation)
+	Operator(const std::string& name, int priority, bool associativity, int binary, const std::function<double(double, double)>& operation)
 	{
 		this->name = name;
 		this->priority = priority;

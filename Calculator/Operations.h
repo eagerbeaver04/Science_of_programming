@@ -3,43 +3,29 @@
 
 #include "Loader.h"
 
-static double sum(double a, double b)
-{
-	return a + b;
-}
-
-static double sub(double a, double b)
-{
-	return a - b;
-}
-
-static double mul(double a, double b)
-{
-	return a * b;
-}
-
-static double div_(double a, double b)
-{
-	if (b)
-		return a / b;
-	std::cerr << std::endl <<"Unavaliable operation: Division by zero"  << std::endl;
-	return a;
-}
-
 class Operations
 {
 public:
 	Operations()
 	{
-		this->operations["+"] = new Operator("+", 1, true, 2, sum);
-		this->operations["-"] = new Operator("-", 1, true, 2, sub);
-		this->operations["*"] = new Operator("*", 2, true, 2, mul);
-		this->operations["/"] = new Operator("/", 2, true, 2, div_);
+		this->operations["+"] = std::make_unique<Operator>("+", 1, true, 2, [](double a, double b) { return a + b; });
+		this->operations["-"] = std::make_unique<Operator>("-", 1, true, 2, [](double a, double b) { return a - b; });
+		this->operations["*"] = std::make_unique<Operator>("*", 2, true, 2, [](double a, double b) { return a * b; });
+		this->operations["/"] = std::make_unique<Operator>("/", 2, true, 2, [](double a, double b) {
+		if (b)
+			return a / b;
+		std::cerr << std::endl << "Unavaliable operation: Division by zero" << std::endl;
+		return a; });
 	};
 	Operations(const std::string& folder, const std::string& extension): Operations()
 	{
-		Loader* loader = Loader::getInstance(folder, extension);
-		loader->loadDll(this->operations, folder, extension);
+		if (folder != "" && extension != "")
+		{
+			Loader* loader = Loader::getInstance(folder, extension);
+			loader->loadDll(this->operations, folder, extension);
+		}
+		else
+			std::cout << std::endl << "Folder for extra operations is not download" << std::endl;
 	};
 
 	int getPriority(const std::string& symbol);
@@ -50,11 +36,11 @@ public:
 	~Operations() 
 	{
 		for (auto& op : operations)
-			delete op.second;
+			op.second.reset();
 		operations.clear();
 	}
 private:
-	std::map<std::string, Operator*> operations;
+	std::map<std::string, std::unique_ptr<Operator>> operations;
 };
 
 #endif
