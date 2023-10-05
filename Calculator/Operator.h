@@ -1,4 +1,3 @@
-#pragma once
 #ifndef OPERATOR_H
 #define OPERATOR_H
 
@@ -8,7 +7,7 @@
 class Operator
 {
 public:
-	Operator(const std::string& name, int priority, bool associativity, int binary, const std::function<double(double, double)>& operation)
+	Operator(const std::string& name, int priority, bool associativity, int binary, std::function<double(double, double)> operation)
 	{
 		this->name = name;
 		this->priority = priority;
@@ -19,7 +18,9 @@ public:
 	Operator() = default;
 	~Operator() = default;
 	Operator(const Operator& A) = default;
+	Operator(Operator&&) = default;
 	Operator& operator = (const Operator& A) = default;
+	Operator& operator=(Operator&&) = default;
 
 	int getPriority()
 	{
