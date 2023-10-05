@@ -14,7 +14,7 @@ std::unique_ptr<Operator> Loader::getOperatorFromDll(const HINSTANCE& load)
 	return op;
 }
 
-void Loader::loadDll(std::map<std::string, std::unique_ptr<Operator>>& operation_list, const std::string& folder, const std::string& extension)
+void Loader::loadDll(std::map<std::string, std::unique_ptr<Operator>>& operations, const std::string& folder, const std::string& extension)
 {
 	std::vector<std::filesystem::path> files;
 
@@ -34,7 +34,7 @@ void Loader::loadDll(std::map<std::string, std::unique_ptr<Operator>>& operation
 		if (load)
 		{
 			std::unique_ptr<Operator> op = getOperatorFromDll(load);
-			operation_list[op->getName()] = std::move(op);
+			operations[op->getName()] = std::move(op);
 			continue;
 		}
 

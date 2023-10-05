@@ -1,6 +1,7 @@
 # Calculator
 ## Calculator on C++ with parser and dll support
 
+Commit history is on another repository https://github.com/eagerbeaver04/Calculator .
 This project is calculator based on Shunting yard algorithm which produce Reverse Polish notation for input expression. 
 
 ## Base functions 
