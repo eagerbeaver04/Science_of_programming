@@ -1,17 +1,15 @@
 #include "Loader.h"
 
-std::unique_ptr<Operator> Loader::getOperatorFromDll(const HINSTANCE& load)
+void Loader::getOperatorFromDll(std::map<std::string, std::unique_ptr<Operator>>& operations, const HINSTANCE& load)
 {
 
 	std::function<double(double, double)> Operation = (double (*) (double, double))GetProcAddress(load, "operation");
 	std::function<int(void)>  Binary = (int (*) (void))GetProcAddress(load, "binary");
 	std::function<int(void)>  Priority = (int (*) (void))GetProcAddress(load, "priority");
-	std::function<std::string(void)> Name = (std::string (*) (void)) GetProcAddress(load, "name");
+	std::function<std::string(void)> Name = (std::string(*) (void)) GetProcAddress(load, "name");
 	std::function<bool(void)>  Associativity = (bool (*) (void))GetProcAddress(load, "associativity");
 
-	std::unique_ptr<Operator> op = std::make_unique<Operator>(Name(), Priority(), Associativity(), Binary(), Operation);
-
-	return op;
+	operations[Name()] = std::move(std::make_unique<Operator>(Name(), Priority(), Associativity(), Binary(), Operation));
 }
 
 void Loader::loadDll(std::map<std::string, std::unique_ptr<Operator>>& operations, const std::string& folder, const std::string& extension)
@@ -32,13 +30,9 @@ void Loader::loadDll(std::map<std::string, std::unique_ptr<Operator>>& operation
 		this->libraries.push_back(load);
 
 		if (load)
-		{
-			std::unique_ptr<Operator> op = getOperatorFromDll(load);
-			operations[op->getName()] = std::move(op);
-			continue;
-		}
-
-		std::cerr << "Opening dll file " << path << " failure" << std::endl;
+			getOperatorFromDll(operations, load);
+		else
+			std::cerr << "Opening dll file " << path << " failure" << std::endl;
 	}
 
 }

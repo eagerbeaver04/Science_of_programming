@@ -9,13 +9,11 @@ private:
 	std::unique_ptr<Parser> parser;
 	std::string input;
 	std::string output;
+
 public:
-	Calculator(const std::string& folder, const std::string& extension)
-	{
-		this->parser = std::make_unique<Parser>(folder, extension);
-		this->input = "";
-		this->output = "";
-	};
+	Calculator(const std::string& folder, const std::string& extension) :
+		parser(std::make_unique<Parser>(folder, extension)), input(""), output("") {};
+
 	~Calculator() = default;
 	Calculator() = default;
 	Calculator(const Calculator&) = default;
@@ -32,6 +30,7 @@ public:
 		if (this->parser->shuntingYard(this->input, this->output))
 			this->parser->executionOrder(this->output);
 	}
+
 };
 
 #endif

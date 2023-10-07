@@ -16,12 +16,7 @@ private:
 	std::string extension;
 
 public:
-	Loader(const std::string& folder, const std::string& extension)
-	{
-		this->libraries;
-		this->folder = folder;
-		this->extension = extension;
-	}
+	Loader(const std::string& folder, const std::string& extension) : libraries({}), folder(folder), extension(extension) {};
 
 	Loader() = default;
 	Loader(const Loader&) = default;
@@ -35,7 +30,8 @@ public:
 			FreeLibrary(lib);
 		libraries.clear();
 	}
-	std::unique_ptr<Operator> getOperatorFromDll(const HINSTANCE& load);
+
+	void getOperatorFromDll(std::map<std::string, std::unique_ptr<Operator>>& operations, const HINSTANCE& load);
 	void loadDll(std::map<std::string, std::unique_ptr<Operator>>& operations, const std::string& folder, const std::string& extension);
 
 };

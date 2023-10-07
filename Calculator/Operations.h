@@ -5,6 +5,9 @@
 
 class Operations
 {
+private:
+	std::map<std::string, std::unique_ptr<Operator>> operations;
+	Loader loader;
 public:
 	Operations()
 	{
@@ -39,10 +42,6 @@ public:
 	Operations(Operations&&) = default;
 	Operations& operator = (const Operations& A) = default;
 	Operations& operator=(Operations&&) = default;
-
-private:
-	std::map<std::string, std::unique_ptr<Operator>> operations;
-	Loader loader;
 };
 
 #endif
