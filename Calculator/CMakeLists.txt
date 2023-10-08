@@ -9,7 +9,5 @@ project ("Calculator")
 add_executable (Calculator "Calculator.cpp" "Calculator.h" "Operator.h" "Loader.h" "Loader.cpp" "Operations.h" "Operations.cpp" "Parser.h" "Parser.cpp")
 
 
-configure_file(${PROJECT_SOURCE_DIR}/plugins/DynamicLib4.dll ${PROJECT_BINARY_DIR}/plugins/DynamicLib4.dll COPYONLY)
-configure_file(${PROJECT_SOURCE_DIR}/plugins/DynamicLib5.dll ${PROJECT_BINARY_DIR}/plugins/DynamicLib5.dll COPYONLY)
-configure_file(${PROJECT_SOURCE_DIR}/plugins/DynamicLib6.dll ${PROJECT_BINARY_DIR}/plugins/DynamicLib6.dll COPYONLY)
+file(COPY "${PROJECT_SOURCE_DIR}/plugins" DESTINATION "${CMAKE_BINARY_DIR}")
 # TODO: Добавьте тесты и целевые объекты, если это необходимо.

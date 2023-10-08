@@ -27,10 +27,12 @@ void Loader::loadDll(std::map<std::string, std::unique_ptr<Operator>>& operation
 	{
 		widecFileName = path.c_str();
 		load = LoadLibraryW(widecFileName);
-		this->libraries.push_back(load);
 
 		if (load)
+		{
+			this->libraries.push_back(load);
 			getOperatorFromDll(operations, load);
+		}
 		else
 			std::cerr << "Opening dll file " << path << " failure" << std::endl;
 	}

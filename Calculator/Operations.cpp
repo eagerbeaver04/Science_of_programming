@@ -27,7 +27,7 @@ int Operations::getBinary(const std::string& symbol)
 double Operations::calculation(const std::string& symbol, double a, double b)
 {
 	if (this->operations.count(symbol) == 1)
-		return this->operations[symbol]->calculation(a,b);
+		return this->operations[symbol]->calculation(a, b);
 	std::cerr << "Unavaliable operation: " << symbol << std::endl;
 	return 0;
 }

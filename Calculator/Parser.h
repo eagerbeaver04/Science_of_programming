@@ -1,5 +1,4 @@
-#ifndef PARSER_H
-#define PARSER_H
+#pragma once
 
 #include "Operations.h"
 #include <sstream>
@@ -21,19 +20,16 @@ private:
 	bool isLetter(const std::string& symbol);
 
 public:
-	bool shuntingYard(const std::string& input, std::string& output);
-	bool executionOrder(const std::string& input);
+	bool parse(const std::string& input, std::string& output);
+	bool evaluate(const std::string& input);
 	double calculation(const std::string& symbol, double a, double b);
 
-	Parser(const std::string& folder, const std::string& extension) :
-		operations(std::make_unique<Operations>(folder, extension)) {};
-
+	Parser(const std::string& folder, const std::string& extension)
+	{
+		operations = std::make_unique<Operations>(folder, extension);
+	}
 	~Parser() = default;
-	Parser(const Parser&) = default;
-	Parser(Parser&&) = default;
-	Parser& operator=(Parser const&) = default;
-	Parser& operator=(Parser&&) = default;
+
 };
 
 
-#endif

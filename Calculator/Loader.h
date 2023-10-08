@@ -1,5 +1,4 @@
-#ifndef LOADER_H
-#define LOADER_H
+#pragma once
 
 #include <Windows.h>
 #include <map>
@@ -17,12 +16,7 @@ private:
 
 public:
 	Loader(const std::string& folder, const std::string& extension) : libraries({}), folder(folder), extension(extension) {};
-
 	Loader() = default;
-	Loader(const Loader&) = default;
-	Loader(Loader&&) = default;
-	Loader& operator=(Loader const&) = default;
-	Loader& operator=(Loader&&) = default;
 
 	~Loader()
 	{
@@ -30,10 +24,7 @@ public:
 			FreeLibrary(lib);
 		libraries.clear();
 	}
-
 	void getOperatorFromDll(std::map<std::string, std::unique_ptr<Operator>>& operations, const HINSTANCE& load);
 	void loadDll(std::map<std::string, std::unique_ptr<Operator>>& operations, const std::string& folder, const std::string& extension);
 
 };
-
-#endif

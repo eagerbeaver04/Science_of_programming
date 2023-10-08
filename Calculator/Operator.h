@@ -1,5 +1,4 @@
-#ifndef OPERATOR_H
-#define OPERATOR_H
+#pragma once
 
 #include <iostream>
 #include <functional>
@@ -17,38 +16,31 @@ public:
 	Operator(const std::string& name, int priority, bool associativity,
 		int binary, const std::function<double(double, double)>& operation)
 		: name(name), priority(priority), associativity(associativity), binary(binary), operation(operation) {};
-
-	Operator() = default;
 	~Operator() = default;
-	Operator(const Operator& A) = default;
-	Operator(Operator&&) = default;
-	Operator& operator = (const Operator& A) = default;
-	Operator& operator=(Operator&&) = default;
 
 	int getPriority()
 	{
-		return this->priority;
+		return priority;
 	}
 	std::string getName()
 	{
-		return this->name;
+		return name;
 	}
 	int getBinary()
 	{
-		return this->binary;
+		return binary;
 	}
 	bool getAssociativity()
 	{
-		return this->associativity;
+		return associativity;
 	}
 	std::function<double(double, double)> getOperation()
 	{
-		return this->operation;
+		return operation;
 	}
 	double calculation(double a, double b)
 	{
-		return (this->operation)(a, b);
+		return (operation)(a, b);
 	}
-};
 
-#endif
+};

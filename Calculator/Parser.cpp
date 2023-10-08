@@ -8,23 +8,23 @@ int Parser::opPriority(const std::string& symbol)
 
 bool Parser::opAssociativity(const std::string& symbol)
 {
-	return this->operations->getAssociativity(symbol);
+    return this->operations->getAssociativity(symbol);
 }
 
 int Parser::opBinary(const std::string& symbol)
 {
-	return this->operations->getBinary(symbol);
+    return this->operations->getBinary(symbol);
 }
 
 bool Parser::isOperator(const std::string& symbol)
 {
     if (symbol == "(" || symbol == ")")
         return false;
-	bool acc = this->opAssociativity(symbol);
-	int bin = this->opBinary(symbol);
-	if ((acc == true && bin == 2) || (acc == false && bin == 1) )
-		return true;
-	return false;
+    bool acc = this->opAssociativity(symbol);
+    int bin = this->opBinary(symbol);
+    if ((acc == true && bin == 2) || (acc == false && bin == 1))
+        return true;
+    return false;
 }
 
 bool Parser::isFunction(const std::string& symbol)
@@ -33,20 +33,20 @@ bool Parser::isFunction(const std::string& symbol)
         return false;
     if (this->opAssociativity(symbol) == true && this->opBinary(symbol) == 1)
         return true;
-	return false;
+    return false;
 }
 
 bool Parser::isIdent(const std::string& symbol)
 {
-	return (symbol >= "0" && symbol <= "9");
+    return (symbol >= "0" && symbol <= "9");
 }
 
-bool Parser::isIdent(char symbol) 
+bool Parser::isIdent(char symbol)
 {
     return (symbol >= '0' && symbol <= '9');
 }
 
-bool Parser::isLetter(char symbol) 
+bool Parser::isLetter(char symbol)
 {
     return (symbol >= 'a' && symbol <= 'z');
 }
@@ -61,136 +61,109 @@ double Parser::calculation(const std::string& symbol, double a, double b)
     return this->operations->calculation(symbol, a, b);
 }
 
-bool Parser::shuntingYard(const std::string& input, std::string& output)
+bool Parser::parse(const std::string& input, std::string& output)
 {
-    bool interruption = false;
-    std::stack<std::string> op_stack;
+    std::stack<std::string> operations_;
     int length = input.length();
     output = "";
-    for (int i = 0; i < length; ++i) 
+    for (int i = 0; i < length; ++i)
     {
-        if (interruption == true)
+        char current_symbol = input[i];
+        std::string current_substring = { current_symbol };
+        if (current_substring != " ")
         {
-            std::cerr << " Process was interrupted" << std::endl;
-            std::cerr << " Please, rewrite expression" << std::endl;
-            return false;
-        }
-        char c = input[i];
-        std::string c_str = { c };
-        if (c_str != " ") 
-        {
-            if (c == '(')
+            if (current_symbol == '(')
+                operations_.push(current_substring);
+            else if (current_symbol == ')')
             {
-                op_stack.push(c_str);
-            }
-            else if (c == ')')
-            {
-                bool pe = false;
-                while (!op_stack.empty())
+                std::string symbols;
+                while (!operations_.empty())
                 {
-                    std::string sc = op_stack.top();
-                    op_stack.pop();
-                    if (sc == "(")
-                    {
-                        pe = true;
+                    symbols = operations_.top();
+                    operations_.pop();
+                    if (symbols == "(")
                         break;
-                    }
                     else
-                        output += sc + "|";
+                        output += symbols + "|";
                 }
-                if (!pe)
+                if (operations_.empty() && symbols != "(")
                 {
-                    std::cout << "Error: parentheses mismatched" << std::endl;
-                    interruption = true;
+                    std::cerr << "Error: parentheses mismatched" << std::endl;
                     return false;
                 }
-                if (!op_stack.empty())
+                if (!operations_.empty())
                 {
-                    std::string sc = op_stack.top();
-                    if (isFunction(sc))
+                    symbols = operations_.top();
+                    if (isFunction(symbols))
                     {
-                        output += sc + "|";
-                        op_stack.pop();
+                        output += symbols + "|";
+                        operations_.pop();
                     }
                 }
             }
-            else if (isIdent(c))
+            else if (isIdent(current_symbol))
             {
                 int j = 0;
-                int dot_flag = 0;
                 while (j < length)
                 {
                     j = i + 1;
                     char c_current = input[j];
-                    if (c_current == '.')
-                    {
-                        dot_flag++;
-                        if (dot_flag < 2)
-                            c_str += c_current;
-                        else
-                        {
-                            std::cerr << " More than one dot in number :" << c_str << std::endl;
-                            interruption = true;
-                            break;
-                        }
-                    }
-                    else if (isIdent(c_current))
-                        c_str += c_current;
+                    if (isIdent(c_current) || c_current == '.')
+                        current_substring += c_current;
                     else
                         break;
                     i++;
                 }
-                output += c_str + "|";
+                output += std::to_string(stod(current_substring)) + "|";
             }
-            else if (isLetter(c_str))
+            else if (isLetter(current_substring))
             {
                 int j = i + 1;
                 char c_current = input[j];
-                while (j<length)
+                while (j < length)
                 {
                     j = i + 1;
                     char c_current = input[j];
                     if (isLetter(c_current))
-                        c_str += c_current;
+                        current_substring += c_current;
                     else
                         break;
                     i++;
                 }
-                if (isFunction(c_str))
-                    op_stack.push(c_str);
+                if (isFunction(current_substring))
+                    operations_.push(current_substring);
             }
-            else if (isOperator(c_str)) 
+            else if (isOperator(current_substring))
             {
-                while (!op_stack.empty()) 
+                while (!operations_.empty())
                 {
-                    std::string sc = op_stack.top();
+                    std::string sc = operations_.top();
                     std::string sc_str = { sc };
-                    if (isOperator(sc_str) && ((opAssociativity(c_str) && (opPriority(c_str) <= opPriority(sc_str))) ||
-                        (!opAssociativity(c_str) && (opPriority(c_str) < opPriority(sc_str))))) 
+                    if (isOperator(sc_str) && ((opAssociativity(current_substring) && (opPriority(current_substring) <= opPriority(sc_str))) ||
+                        (!opAssociativity(current_substring) && (opPriority(current_substring) < opPriority(sc_str)))))
                     {
-                        output += sc_str +"|";
-                        op_stack.pop();
+                        output += sc_str + "|";
+                        operations_.pop();
                     }
                     else
                         break;
                 }
-                op_stack.push(c_str);
-            }            
-            else 
+                operations_.push(current_substring);
+            }
+            else
             {
-                std::cout << "Unknown token in" << c_str << std::endl;
-                interruption = true;
+                std::cerr << "Unknown token in" << current_substring << std::endl;
                 return false;
             }
         }
     }
-    while (!op_stack.empty()) {
-        std::string sc = op_stack.top();
-        op_stack.pop();
-        if (sc == "(" || sc == ")") 
+    while (!operations_.empty())
+    {
+        std::string sc = operations_.top();
+        operations_.pop();
+        if (sc == "(" || sc == ")")
         {
-            std::cout << "Error: parentheses mismatched" << std::endl;
-            interruption = true;
+            std::cerr << "Error: parentheses mismatched" << std::endl;
             return false;
         }
         output += sc + "|";
@@ -198,98 +171,100 @@ bool Parser::shuntingYard(const std::string& input, std::string& output)
     return true;
 }
 
-bool Parser::executionOrder(const std::string& input) 
+bool Parser::evaluate(const std::string& input)
 {
     int const length = input.length();
-    std::vector<std::string> stack(length);
-    std::vector < double > stack2(length);
+    std::vector<std::string> operations_(length);
+    std::vector < double > values(length);
     int sl = 0;
     int rn = 0;
-    for (int i = 0; i < length; ++i) 
+    for (int i = 0; i < length; ++i)
     {
-        char c = input[i];
-        std::string c_str = { c };
-        if (isIdent(c_str)) 
+        char current_symbol = input[i];
+        std::string current_substring = { current_symbol };
+        if (isIdent(current_substring))
         {
-            double val;
-            char c_current = input[i+1];
+            double value;
+            char c_current = input[i + 1];
             while (c_current != '|')
             {
 
-                c_str += c_current;
+                current_substring += c_current;
                 i++;
-                c_current = input[i+1];
+                c_current = input[i + 1];
             }
             i++;
-            std::istringstream(c_str) >> val;
-            stack[sl] = c_str;
-            stack2[sl] = val;
+            std::istringstream(current_substring) >> value;
+            operations_[sl] = current_substring;
+            values[sl] = value;
             ++sl;
         }
-        else 
+        else
         {
-            if (isLetter(c_str))
+            if (isLetter(current_substring))
             {
                 char c_current = input[i + 1];
                 while (c_current != '|')
                 {
-                    c_str += c_current;
+                    current_substring += c_current;
                     i++;
                     c_current = input[i + 1];
                 }
-                stack[sl] = c_str;
+                operations_[sl] = current_substring;
             }
             i++;
-            if (isOperator(c_str) || isFunction(c_str)) 
+            if (isOperator(current_substring) || isFunction(current_substring))
             {
-                int nargs = opBinary(c_str);
-                int Tnargs = nargs;
-                double val = 0;
-                std::string res = "(" +  std::to_string(rn++) + ")";
+                int arguments = opBinary(current_substring);
+                double value = 0;
+                std::string res = "(" + std::to_string(rn++) + ")";
                 std::cout << res << " = ";
 
-                if (sl < nargs) 
+                if (sl < arguments)
                 {
-                    std::cout << "Error: insufficient arguments in expression" << std::endl;
+                    std::cerr << "Error: insufficient arguments in expression" << std::endl;
                     return false;
                 }
 
-                if (nargs == 1)
+                if (arguments == 1)
                 {
-                    std::string sc = stack[sl - 1];
-                    double sc2 = stack2[sl - 1];
+                    std::string prev_substring = operations_[sl - 1];
+                    double prev_value = values[sl - 1];
                     sl--;
-                    val = calculation(c_str, sc2, 0);
-                    if(opAssociativity(c_str))
-                        std::cout << c_str << " " << sc << " = " << val << std::endl;
+                    value = calculation(current_substring, prev_value, 0);
+                    if (opAssociativity(current_substring))
+                        std::cout << current_substring << " " << prev_substring << " = " << value << std::endl;
                     else
-                        std::cout  << sc << " " << c_str  << " = " << val << std::endl;
+                        std::cout << prev_substring << " " << current_substring << " = " << value << std::endl;
                 }
                 else
                 {
-                    std::string sc1 = stack[sl - 2];
-                    double sc21 = stack2[sl - 2];
-                    std::cout << sc1 << " " << c << " ";
-                    std::string sc2 = stack[sl - 1];
-                    double sc22 = stack2[sl - 1];
-                    val = calculation(c_str, sc21, sc22);
-                    std::cout << sc2 << " = " << val << std::endl;
+                    std::string prev_substring1 = operations_[sl - 2];
+                    double prev_value1 = values[sl - 2];
+                    std::cout << prev_substring1 << " " << current_symbol << " ";
+                    std::string prev_substring2 = operations_[sl - 1];
+                    double prev_value2 = values[sl - 1];
+                    value = calculation(current_substring, prev_value1, prev_value2);
+                    std::cout << prev_substring2 << " = " << value << std::endl;
                     sl -= 2;
                 }
-                stack[sl] = res;
-                stack2[sl] = val;
+                operations_[sl] = res;
+                values[sl] = value;
                 ++sl;
             }
         }
     }
-    if (sl == 1) {
-        std::string sc = stack[sl - 1];
-        double sc1 = stack2[sl - 1];
+
+    if (sl == 1)
+    {
+        std::string sc = operations_[sl - 1];
+        double sc1 = values[sl - 1];
         sl--;
-        std::cout << "Result : " << sc << " = " << sc1 << std::endl;
+        std::cerr << "Result : " << sc << " = " << sc1 << std::endl;
         return true;
     }
-    std::cout << "Error: too many values entered by the user" << std::endl;
+
+    std::cerr << "Error: too many values entered by the user" << std::endl;
     return false;
 }
 
