@@ -16,6 +16,7 @@ public:
 	Operator(const std::string& name, int priority, bool associativity,
 		int binary, const std::function<double(double, double)>& operation)
 		: name(name), priority(priority), associativity(associativity), binary(binary), operation(operation) {};
+
 	~Operator() = default;
 
 	int getPriority()

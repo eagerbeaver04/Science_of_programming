@@ -37,11 +37,8 @@ public:
 	int getBinary(const std::string& symbol);
 
 	double calculation(const std::string& symbol, double a, double b);
+
 	~Operations() = default;
-	Operations(const Operations& A) = default;
-	Operations(Operations&&) = default;
-	Operations& operator = (const Operations& A) = default;
-	Operations& operator=(Operations&&) = default;
 
 };
 
