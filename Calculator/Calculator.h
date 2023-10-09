@@ -21,8 +21,8 @@ public:
 	}
 	void calculation()
 	{
-		if (parser->parse(this->input, this->output))
-			parser->evaluate(this->output);
+		if (parser->parse(input, output))
+			parser->evaluate(output);
 	}
 
 };
