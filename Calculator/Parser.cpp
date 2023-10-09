@@ -113,42 +113,45 @@ bool Parser::parse(const std::string& input, std::string& output)
     output = "";
     for (int i = 0; i < length; ++i)
     {
-        char current_symbol = input[i];
-        std::string current_substring = { current_symbol };
+        std::string current_substring = { input[i] };
         if (current_substring != " ")
         {
-            if (current_symbol == '(')
+            if (current_substring == "(")
                 operations_.push(current_substring);
-            else if (current_symbol == ')')
+            else if (current_substring == ")")
             {
                 if (!parenthesesBalance(operations_, output))
                     return false;
             }
-            else if (isIdent(current_symbol))
+            else if (isIdent(current_substring))
             {
                 int j = 0;
                 while (j < length)
                 {
                     j = i + 1;
-                    char c_current = input[j];
-                    if (isIdent(c_current) || c_current == '.')
-                        current_substring += c_current;
+                    char current_symbol = input[j];
+                    if (isIdent(current_symbol) || current_symbol == '.')
+                        current_substring += current_symbol;
                     else
                         break;
                     i++;
                 }
-                output += std::to_string(stod(current_substring)) + "|";
+                double val1 = stod(current_substring);
+                int val2 = (int)val1;
+                if (val1 == val2)
+                    output += std::to_string(val2) + "|";
+                else
+                    output += std::to_string(val1) + "|";
             }
             else if (isLetter(current_substring))
             {
                 int j = i + 1;
-                char c_current = input[j];
                 while (j < length)
                 {
                     j = i + 1;
-                    char c_current = input[j];
-                    if (isLetter(c_current))
-                        current_substring += c_current;
+                    char current_symbol = input[j];
+                    if (isLetter(current_symbol))
+                        current_substring += current_symbol;
                     else
                         break;
                     i++;
@@ -167,14 +170,14 @@ bool Parser::parse(const std::string& input, std::string& output)
     }
     while (!operations_.empty())
     {
-        std::string sc = operations_.top();
+        std::string current_substring = operations_.top();
         operations_.pop();
-        if (sc == "(" || sc == ")")
+        if (current_substring == "(" || current_substring == ")")
         {
             std::cerr << "Error: parentheses mismatched" << std::endl;
             return false;
         }
-        output += sc + "|";
+        output += current_substring + "|";
     }
     return true;
 }
@@ -188,15 +191,13 @@ bool Parser::evaluate(const std::string& input)
     int iteration_of_calculation = 0;
     for (int i = 0; i < length; ++i)
     {
-        char current_symbol = input[i];
-        std::string current_substring = { current_symbol };
+        std::string current_substring = { input[i] };
         if (isIdent(current_substring))
         {
             double value;
             char c_current = input[i + 1];
             while (c_current != '|')
             {
-
                 current_substring += c_current;
                 i++;
                 c_current = input[i + 1];
@@ -224,7 +225,7 @@ bool Parser::evaluate(const std::string& input)
             if (isOperator(current_substring) || isFunction(current_substring))
             {
                 int arguments = opBinary(current_substring);
-                double value = 0;
+                double value;
                 std::string res = "(" + std::to_string(iteration_of_calculation++) + ")";
                 std::cout << res << " = ";
                 if (last_index < arguments)
@@ -247,7 +248,7 @@ bool Parser::evaluate(const std::string& input)
                 {
                     std::string prev_substring1 = operations_[last_index - 2];
                     double prev_value1 = values[last_index - 2];
-                    std::cout << prev_substring1 << " " << current_symbol << " ";
+                    std::cout << prev_substring1 << " " << input[i] << " ";
                     value = calculation(current_substring, prev_value1, prev_value);
                     std::cout << prev_substring << " = " << value << std::endl;
                     last_index -= 2;
@@ -269,5 +270,10 @@ bool Parser::evaluate(const std::string& input)
     std::cerr << "Error: too many values entered by the user" << std::endl;
     return false;
 }
+
+
+
+
+
 
 
