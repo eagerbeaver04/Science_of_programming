@@ -1,43 +1,43 @@
 #include "Parser.h"
 
-int Parser::opPriority(const std::string& symbol)
+int Parser::opPriority(const std::string& symbols)
 {
-    return this->operations->getPriority(symbol);
+    return operations->getPriority(symbols);
 }
 
-bool Parser::opAssociativity(const std::string& symbol)
+bool Parser::opAssociativity(const std::string& symbols)
 {
-    return this->operations->getAssociativity(symbol);
+    return operations->getAssociativity(symbols);
 }
 
-int Parser::opBinary(const std::string& symbol)
+int Parser::opBinary(const std::string& symbols)
 {
-    return this->operations->getBinary(symbol);
+    return operations->getBinary(symbols);
 }
 
-bool Parser::isOperator(const std::string& symbol)
+bool Parser::isOperator(const std::string& symbols)
 {
-    if (symbol == "(" || symbol == ")")
+    if (symbols == "(" || symbols == ")")
         return false;
-    bool acc = this->opAssociativity(symbol);
-    int bin = this->opBinary(symbol);
-    if ((acc == true && bin == 2) || (acc == false && bin == 1))
+    bool associativity = opAssociativity(symbols);
+    int binary = opBinary(symbols);
+    if ((associativity == true && binary == 2) || (associativity == false && binary == 1))
         return true;
     return false;
 }
 
-bool Parser::isFunction(const std::string& symbol)
+bool Parser::isFunction(const std::string& symbols)
 {
-    if (symbol == "(" || symbol == ")")
+    if (symbols == "(" || symbols == ")")
         return false;
-    if (this->opAssociativity(symbol) == true && this->opBinary(symbol) == 1)
+    if (opAssociativity(symbols) == true && opBinary(symbols) == 1)
         return true;
     return false;
 }
 
-bool Parser::isIdent(const std::string& symbol)
+bool Parser::isIdent(const std::string& symbols)
 {
-    return (symbol >= "0" && symbol <= "9");
+    return (symbols >= "0" && symbols <= "9");
 }
 
 bool Parser::isIdent(char symbol)
@@ -50,17 +50,17 @@ bool Parser::isLetter(char symbol)
     return (symbol >= 'a' && symbol <= 'z');
 }
 
-bool Parser::isLetter(const std::string& symbol)
+bool Parser::isLetter(const std::string& symbols)
 {
-    return (symbol >= "a" && symbol <= "z");
+    return (symbols >= "a" && symbols <= "z");
 }
 
 double Parser::calculation(const std::string& symbol, double a, double b)
 {
-    return this->operations->calculation(symbol, a, b);
+    return operations->calculation(symbol, a, b);
 }
 
-bool Parser::parenthesesBalance(std::stack<std::string>& operations_, std::string& output)
+void Parser::parenthesesBalance(std::stack<std::string>& operations_, std::string& output)
 {
     std::string symbols;
     while (!operations_.empty())
@@ -73,10 +73,7 @@ bool Parser::parenthesesBalance(std::stack<std::string>& operations_, std::strin
             output += symbols + "|";
     }
     if (operations_.empty() && symbols != "(")
-    {
-        std::cerr << "Error: parentheses mismatched" << std::endl;
-        return false;
-    }
+        throw std::runtime_error("Error: parentheses mismatched");
     if (!operations_.empty())
     {
         symbols = operations_.top();
@@ -86,7 +83,6 @@ bool Parser::parenthesesBalance(std::stack<std::string>& operations_, std::strin
             operations_.pop();
         }
     }
-    return true;
 }
 
 void Parser::operationPriorityArrangment(std::stack<std::string>& operations_, std::string& current_operator, std::string& output)
@@ -106,7 +102,7 @@ void Parser::operationPriorityArrangment(std::stack<std::string>& operations_, s
     operations_.push(current_operator);
 }
 
-bool Parser::parse(const std::string& input, std::string& output)
+void Parser::parse(const std::string& input, std::string& output)
 {
     std::stack<std::string> operations_;
     int length = input.length();
@@ -119,10 +115,7 @@ bool Parser::parse(const std::string& input, std::string& output)
             if (current_substring == "(")
                 operations_.push(current_substring);
             else if (current_substring == ")")
-            {
-                if (!parenthesesBalance(operations_, output))
-                    return false;
-            }
+                parenthesesBalance(operations_, output);
             else if (isIdent(current_substring))
             {
                 int j = 0;
@@ -162,10 +155,7 @@ bool Parser::parse(const std::string& input, std::string& output)
             else if (isOperator(current_substring))
                 operationPriorityArrangment(operations_, current_substring, output);
             else
-            {
-                std::cerr << "Unknown token in" << current_substring << std::endl;
-                return false;
-            }
+                throw std::runtime_error("Unknown operation in " + current_substring);
         }
     }
     while (!operations_.empty())
@@ -173,16 +163,12 @@ bool Parser::parse(const std::string& input, std::string& output)
         std::string current_substring = operations_.top();
         operations_.pop();
         if (current_substring == "(" || current_substring == ")")
-        {
-            std::cerr << "Error: parentheses mismatched" << std::endl;
-            return false;
-        }
+            throw std::runtime_error("Error: parentheses mismatched");
         output += current_substring + "|";
     }
-    return true;
 }
 
-bool Parser::evaluate(const std::string& input)
+void Parser::evaluate(const std::string& input)
 {
     int length = input.length();
     std::vector<std::string> operations_(length);
@@ -229,10 +215,7 @@ bool Parser::evaluate(const std::string& input)
                 std::string res = "(" + std::to_string(iteration_of_calculation++) + ")";
                 std::cout << res << " = ";
                 if (last_index < arguments)
-                {
-                    std::cerr << "Error: insufficient arguments in expression" << std::endl;
-                    return false;
-                }
+                    throw std::runtime_error("Error: insufficient arguments in expression");
                 std::string prev_substring = operations_[last_index - 1];
                 double prev_value = values[last_index - 1];
                 if (arguments == 1)
@@ -248,8 +231,8 @@ bool Parser::evaluate(const std::string& input)
                 {
                     std::string prev_substring1 = operations_[last_index - 2];
                     double prev_value1 = values[last_index - 2];
-                    std::cout << prev_substring1 << " " << input[i] << " ";
                     value = calculation(current_substring, prev_value1, prev_value);
+                    std::cout << prev_substring1 << " " << current_substring << " ";
                     std::cout << prev_substring << " = " << value << std::endl;
                     last_index -= 2;
                 }
@@ -264,11 +247,10 @@ bool Parser::evaluate(const std::string& input)
         std::string final_operation = operations_[last_index - 1];
         double final_value = values[last_index - 1];
         last_index--;
-        std::cerr << "Result : " << final_operation << " = " << final_value << std::endl;
-        return true;
+        std::cout << "Result : " << final_operation << " = " << final_value << std::endl;
     }
-    std::cerr << "Error: too many values entered by the user" << std::endl;
-    return false;
+    else
+        throw std::runtime_error("Error: too many values entered by the user");
 }
 
 

@@ -11,7 +11,14 @@ int main(int argc, char** argv)
 		std::string input;
 		std::getline(std::cin, input);
 		app.setInput(input);
-		app.calculation();
+		try
+		{
+			app.calculation();
+		}
+		catch (const std::runtime_error& error_message)
+		{
+			std::cerr << error_message.what() << std::endl;
+		}
 	}
 
 	return 0;

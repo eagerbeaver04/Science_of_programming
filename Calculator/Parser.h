@@ -18,18 +18,17 @@ private:
 	bool isIdent(char symbol);
 	bool isLetter(char symbol);
 	bool isLetter(const std::string& symbol);
-	bool parenthesesBalance(std::stack<std::string>& operations_, std::string& output);
+	void parenthesesBalance(std::stack<std::string>& operations_, std::string& output);
 	void operationPriorityArrangment(std::stack<std::string>& operations_, std::string& current_symbol, std::string& output);
 
 public:
-	bool parse(const std::string& input, std::string& output);
-	bool evaluate(const std::string& input);
+	void parse(const std::string& input, std::string& output);
+	void evaluate(const std::string& input);
 	double calculation(const std::string& symbol, double a, double b);
 
-	Parser(const std::string& folder, const std::string& extension)
-	{
-		operations = std::make_unique<Operations>(folder, extension);
-	}
+	Parser(const std::string& folder, const std::string& extension) :
+		operations(std::make_unique<Operations>(folder, extension)) {};
+
 	~Parser() = default;
 
 };

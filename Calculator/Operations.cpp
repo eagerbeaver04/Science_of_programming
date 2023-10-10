@@ -1,33 +1,30 @@
 #include "Operations.h"
 
-int Operations::getPriority(const std::string& symbol)
+int Operations::getPriority(const std::string& symbols)
 {
-	if (this->operations.count(symbol) == 1)
-		return this->operations[symbol]->getPriority();
-	std::cerr << "Unavaliable operation: " << symbol << std::endl;
-	return 1;
+	if (operations.count(symbols) == 0)
+		throw std::runtime_error("Unavaliable operation: " + symbols);
+	return operations[symbols]->getPriority();
 }
 
-bool Operations::getAssociativity(const std::string& symbol)
+bool Operations::getAssociativity(const std::string& symbols)
 {
-	if (this->operations.count(symbol) == 1)
-		return this->operations[symbol]->getAssociativity();
-	std::cerr << "Unavaliable operation: " << symbol << std::endl;
-	return true;
+	if (operations.count(symbols) == 0)
+		throw std::runtime_error("Unavaliable operation: " + symbols);
+	return operations[symbols]->getAssociativity();
 }
 
-int Operations::getBinary(const std::string& symbol)
+int Operations::getBinary(const std::string& symbols)
 {
-	if (this->operations.count(symbol) == 1)
-		return this->operations[symbol]->getBinary();
-	std::cerr << "Unavaliable operation: " << symbol << std::endl;
-	return 2;
+	if (operations.count(symbols) == 0)
+		throw std::runtime_error("Unavaliable operation: " + symbols);
+	return operations[symbols]->getBinary();
 }
 
-double Operations::calculation(const std::string& symbol, double a, double b)
+double Operations::calculation(const std::string& symbols, double a, double b)
 {
-	if (this->operations.count(symbol) == 1)
-		return this->operations[symbol]->calculation(a, b);
-	std::cerr << "Unavaliable operation: " << symbol << std::endl;
-	return 0;
+	if (operations.count(symbols) == 0)
+		throw std::runtime_error("Unavaliable operation: " + symbols);
+	return operations[symbols]->calculation(a, b);
 }
+
