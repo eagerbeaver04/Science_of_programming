@@ -25,7 +25,7 @@ public:
 		if (folder != "" && extension != "")
 		{
 			loader = Loader(folder, extension);
-			loader.loadDll(this->operations, folder, extension);
+			loader.loadDll(operations, folder, extension);
 		}
 		else
 			std::cerr << std::endl << "Folder for extra operations is not download" << std::endl;

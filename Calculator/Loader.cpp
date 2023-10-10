@@ -30,7 +30,7 @@ void Loader::loadDll(std::map<std::string, std::unique_ptr<Operator>>& operation
 
 		if (load)
 		{
-			this->libraries.push_back(load);
+			libraries.push_back(load);
 			getOperatorFromDll(operations, load);
 		}
 		else

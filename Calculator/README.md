@@ -19,7 +19,7 @@ This project is calculator based on Shunting yard algorithm which produce Revers
 
 Input: 
 ```
-1. (4! - sin(3.25 + 4^(1+2!) - sin(2.12)) - 9/4) * 3.2
+(4! - sin(3.25 + 4^(1+2!) - sin(2.12)) - 9/4) * 3.2
 ```
 
 Output:
@@ -38,4 +38,32 @@ Output:
 12. (10) = (8) - (9) = 22.1611
 13. (11) = (10) * 3.2 = 70.9154
 14. Result : (11) = 70.9154
+```
+
+## Examples of exceptions
+```
+Input: 2.5!
+Output: 
+1. (0) = Factorial is function for integer non-negative numbers
+
+Input: (0-0.5)^0.5
+Output: 
+1. (0) = 0 - 0.500000 = -0.5
+2. (1) = Negative number in a fractional power
+
+Input: (0-3)!
+Output:
+1. (0) = 0 - 3 = -3
+2. (1) = Factorial is function for integer non-negative numbers
+
+Input: 1&3
+Output:
+1. Unavaliable operation: &
+
+Input: (2+9
+Output:
+1. Error: parentheses mismatched
+
+Input: (2+)
+1. (0) = Error: insufficient arguments in expression
 ```
