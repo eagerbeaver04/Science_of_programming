@@ -17,8 +17,7 @@ public:
 		operations["/"] = std::make_unique<Operator>("/", 2, true, 2, [](double a, double b) {
 			if (b)
 				return a / b;
-			std::cerr << std::endl << "Unavaliable operation: Division by zero" << std::endl;
-			return a; });
+			throw std::runtime_error("Unavaliable operation: Division by zero"); });
 		loader = Loader();
 	};
 	Operations(const std::string& folder, const std::string& extension) : Operations()
