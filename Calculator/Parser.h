@@ -29,8 +29,6 @@ public:
 	Parser(const std::string& folder, const std::string& extension) :
 		operations(std::make_unique<Operations>(folder, extension)) {};
 
-	~Parser() = default;
-
 };
 
 

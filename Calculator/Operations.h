@@ -38,6 +38,10 @@ public:
 	double calculation(const std::string& symbol, double a, double b);
 
 	~Operations() = default;
+	Operations(const Operations&) = default;
+	Operations(Operations&&) = default;
+	Operations& operator = (const Operations&) = default;
+	Operations& operator = (Operations&&) = default;
 
 };
 

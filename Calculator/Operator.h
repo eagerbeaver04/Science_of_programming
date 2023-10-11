@@ -17,8 +17,6 @@ public:
 		int binary, const std::function<double(double, double)>& operation)
 		: name(name), priority(priority), associativity(associativity), binary(binary), operation(operation) {};
 
-	~Operator() = default;
-
 	int getPriority()
 	{
 		return priority;

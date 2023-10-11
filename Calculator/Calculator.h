@@ -13,8 +13,6 @@ public:
 	Calculator(const std::string& folder, const std::string& extension) :
 		parser(std::make_unique<Parser>(folder, extension)), input(""), output("") {};
 
-	~Calculator() = default;
-
 	void setInput(const std::string& input_)
 	{
 		input = input_;
