@@ -5,20 +5,20 @@ void Node::push(std::unique_ptr<Node> child)
     children.push_back(std::move(child));
 }
 
-std::string Node::to_string(int depth) 
+std::string Node::toString(int depth)
 {
     const std::string spaces = std::string(depth * 2, ' ');
     std::string result = "";
     result += spaces + "<" + tag + "> " + value + "\n";
-    for (const auto& child : children) 
-        result+= child->to_string(depth + 1);
-    result +=  spaces + "</" + tag + ">" + "\n";
+    for (const auto& child : children)
+        result += child->toString(depth + 1);
+    result += spaces + "</" + tag + ">" + "\n";
     return result;
 }
 
-void Node::for_each(std::function<void(const Node&)> function) 
+void Node::forEach(std::function<void(const Node&)> function)
 {
     function(*this);
-    for (const auto& child : children) 
-        child->for_each(function);
+    for (const auto& child : children)
+        child->forEach(function);
 }

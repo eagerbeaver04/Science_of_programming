@@ -14,6 +14,6 @@ public:
     Node(const std::string& tag, const std::string& value) : tag(tag), value(value) {};
 
     void push(std::unique_ptr<Node> child);
-    std::string to_string(int depth);
-    void for_each(std::function<void(const Node&)> function);
+    std::string toString(int depth);
+    void forEach(std::function<void(const Node&)> function);
 };
