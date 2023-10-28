@@ -145,4 +145,29 @@ Iterator Tree::add(Iterator it, std::unique_ptr<Node> node)
     return Iterator(getRoot(), node.get());
 }
 
+bool Iterator::erase()
+{
+   std::vector <std::unique_ptr<Node>>& tmp = ptr->getChildren();
+   std::vector <std::unique_ptr<Node>>& parent_children = root->findParent(ptr)->getChildren();
+   for (int i = 0; i < tmp.size(); i++)
+       parent_children.push_back(std::move(tmp[i]));
+   for(int i = 0; i < parent_children.size(); i++)
+       if (parent_children[i].get() == ptr)
+       {
+           parent_children[i].reset();
+           parent_children.erase(parent_children.begin() + i);
+           break;
+       }
+   return true;
+}
 
+
+bool Tree::erase(Iterator it)
+{
+    if (it == Iterator(root.get(), root.get()))
+        return false;
+    if (it == end())
+        return false;
+    return it.erase();
+}
+ 

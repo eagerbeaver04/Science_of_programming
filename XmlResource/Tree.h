@@ -24,6 +24,7 @@ public:
 	friend bool operator != (const Iterator& a, const Iterator& b) { return a.ptr != b.ptr; };
 	bool find(const std::function<bool(Node* node)>& function);
 	void add(std::unique_ptr<Node>);
+	bool erase();
 	void print();
 };
 
@@ -49,6 +50,7 @@ public:
 	Iterator add(Iterator it, std::unique_ptr<Node>);
 	Iterator findByValue(const std::string& value);
 	Iterator findByTag(const std::string& tag);
+	bool erase(Iterator it);
 };
 
 

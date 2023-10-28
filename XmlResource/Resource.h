@@ -20,7 +20,7 @@ public:
 	Iterator findByValue(const std::string& value);
 	Iterator find(const std::function<bool(Node* node)>& function);
 	Iterator add(Iterator it, std::unique_ptr<Node> node);
-
+	bool erase(Iterator it);
 	Resource(const Resource&) = delete;
 	Resource(Resource&&) = delete;
 	Resource& operator = (const Resource&) = delete;

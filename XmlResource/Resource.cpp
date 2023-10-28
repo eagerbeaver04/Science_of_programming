@@ -55,3 +55,8 @@ Iterator Resource::add(Iterator it, std::unique_ptr<Node> node)
 {
 	return tree.add(it, std::move(node));
 }
+
+bool Resource::erase(Iterator it)
+{
+	return tree.erase(it);
+}
