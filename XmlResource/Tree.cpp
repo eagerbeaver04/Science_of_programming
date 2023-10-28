@@ -3,7 +3,7 @@
 void Tree::parse(const std::string& str)
 {
     int pos = 0;
-    root_node = parseNode(str, pos);
+    root = parseNode(str, pos);
 }
 
 void Tree::load(const std::string& path)
@@ -35,14 +35,14 @@ void Tree::print()
 
 void Tree::forEach(std::function<void(const Node&)> function)
 {
-    root_node->forEach(function);
+    root->forEach(function);
 }
 
 std::unique_ptr<Node> Tree::parseNode(const std::string& str, int& pos)
 {
     std::string tag = getNextTag(str, pos);
     std::string value = getNextValue(str, pos);
-    std::unique_ptr<Node> node(new Node(tag, value));
+    std::unique_ptr<Node> node(new Node( tag, value));
     std::string next_tag = getNextTag(str, pos);
     while (next_tag != ("/" + tag) && pos < str.size())
     {
@@ -71,5 +71,35 @@ std::string Tree::getNextValue(const std::string& str, int& pos)
 
 std::string Tree::toString()
 {
-    return root_node->toString(0);
+    return root->toString(0);
+}
+
+void Iterator::next()
+{
+
+    Node* father = nullptr;
+    father = root->findParent(ptr);
+
+    if (father != nullptr)
+    {
+        int i = father->numberInChildren(ptr);
+        if (i == father->children.size() - 1)
+        {
+            ptr = father;
+            return;
+        }
+        else
+        {
+            ptr = father->children[i + 1].get()->begin();
+            return;
+        }
+        father = root->findParent(ptr);
+    }
+    ptr = ptr->begin();
+    father = nullptr;
+}
+
+void Iterator::print()
+{
+    ptr->print();
 }

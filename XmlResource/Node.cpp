@@ -22,3 +22,58 @@ void Node::forEach(std::function<void(const Node&)> function)
     for (const auto& child : children)
         child->forEach(function);
 }
+
+Node* Node::findParent(Node* element)
+{
+    int length = children.size();
+    if (length == 0)
+        return nullptr;
+    for (int i = 0; i < length; i++)
+    {
+        if (children[i].get() == element)
+            return this;
+        else
+        {
+            Node* node = children[i].get()->findParent(element);
+            if (node != nullptr)
+                return node;
+            node = nullptr;
+            continue;
+        }
+    }
+    return nullptr;
+}
+
+int Node::numberInChildren(Node* element)
+{
+    for (int i = 0; i < children.size(); i++)
+        if (element == children[i].get())
+            return i;
+    return -2;
+}
+
+Node* Node::begin()
+{
+    Node* father = new Node("", "");
+    father = this;
+    while (father->children.size() != 0)
+        father = father->children[0].get();
+    return father;
+}
+
+Node* Node::end()
+{
+    Node* father = new Node("", "");
+    father = this;
+    int length = father->children.size();
+    if (length == 1)
+        return father;
+    while (length != 0)
+        father = father->children[length - 1].get();
+    return father;
+}
+
+void Node::print()
+{
+    std::cout << tag << " " << value << std::endl;
+}

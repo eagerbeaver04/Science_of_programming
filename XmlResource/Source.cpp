@@ -1,13 +1,16 @@
-#include "Tree.h"
+#include "Resource.h"
 
 int main() 
 {
     Tree* doc = new Tree();
+    Resource& res = res.create();
     try 
     {
-        doc->load("input.txt");
-        doc->print();
-        doc->save("output.txt");
+        res.load("input.txt");
+        res.print();
+        res.save("output.txt");
+        for (auto it = res.begin(), end = res.end(); it != end; ++it)
+            it->print();
     }
     catch(const std::runtime_error& err)
     {
