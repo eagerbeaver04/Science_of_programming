@@ -30,7 +30,5 @@ int main()
     {
         std::cerr << err.what() << std::endl;
     }
-    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-    _CrtDumpMemoryLeaks();
     return 0;
 };

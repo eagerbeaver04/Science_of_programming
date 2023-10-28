@@ -5,7 +5,7 @@ class Resource
 {
 private:
 	Tree tree;
-	Resource() { tree = Tree(); }
+	Resource() = default;
 	~Resource() = default;
 public:
 	static Resource& create();
