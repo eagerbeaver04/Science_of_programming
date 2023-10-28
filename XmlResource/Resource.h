@@ -15,7 +15,9 @@ public:
 
 	Iterator begin();
 	Iterator end();
-
+	Iterator rend();
+	Iterator findByTag(const std::string& tag);
+	Iterator findByValue(const std::string& value);
 	Resource(const Resource&) = delete;
 	Resource(Resource&&) = delete;
 	Resource& operator = (const Resource&) = delete;

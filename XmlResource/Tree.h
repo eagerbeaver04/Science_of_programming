@@ -28,7 +28,6 @@ class Tree
 {
 private:
     std::unique_ptr<Node> root;
-
     std::unique_ptr<Node> parseNode(const std::string& str, int& pos);
     std::string toString();
     std::string getNextTag(const std::string& str, int& pos);
@@ -40,8 +39,11 @@ public:
     void print();
     void forEach(std::function<void(const Node&)> callback);
 
-	Iterator begin() { return Iterator(root->begin(), root.get()); }
-	Iterator end() { return Iterator(root->end(), root.get()); }
+	Iterator begin() { return Iterator(root->children[0].get()->begin(), root.get()); }
+	Iterator rend() { return Iterator(root->children[0].get()->end(), root.get()); }
+	Iterator end() { return Iterator(root.get()->end(), root.get()); }
+	Iterator findByValue(const std::string& value);
+	Iterator findByTag(const std::string& tag);
 };
 
 

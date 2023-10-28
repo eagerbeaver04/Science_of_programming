@@ -30,3 +30,18 @@ Iterator Resource::end()
 {
 	return tree.end();
 }
+
+Iterator Resource::rend()
+{
+	return tree.rend();
+}
+
+Iterator Resource::findByTag(const std::string& tag)
+{
+	return tree.findByTag(tag);
+}
+
+Iterator Resource::findByValue(const std::string& value)
+{
+	return tree.findByValue(value);
+}

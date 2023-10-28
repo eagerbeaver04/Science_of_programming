@@ -63,17 +63,10 @@ Node* Node::begin()
 
 Node* Node::end()
 {
-    Node* father = new Node("", "");
-    father = this;
-    int length = father->children.size();
-    if (length == 1)
-        return father;
-    while (length != 0)
-        father = father->children[length - 1].get();
-    return father;
+    return this;
 }
 
 void Node::print()
 {
-    std::cout << tag << " " << value << std::endl;
+    std::cout << tag << " value : " << value << std::endl;
 }

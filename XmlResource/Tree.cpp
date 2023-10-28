@@ -3,7 +3,9 @@
 void Tree::parse(const std::string& str)
 {
     int pos = 0;
-    root = parseNode(str, pos);
+    root = std::move(std::make_unique<Node>("", ""));
+    std::unique_ptr<Node> root1 =  parseNode(str, pos);
+    root->push(std::move(root1));
 }
 
 void Tree::load(const std::string& path)
@@ -71,7 +73,7 @@ std::string Tree::getNextValue(const std::string& str, int& pos)
 
 std::string Tree::toString()
 {
-    return root->toString(0);
+    return root->children[0]->toString(0);
 }
 
 void Iterator::next()
@@ -95,11 +97,27 @@ void Iterator::next()
         }
         father = root->findParent(ptr);
     }
-    ptr = ptr->begin();
+    ptr = root->end();
     father = nullptr;
 }
 
 void Iterator::print()
 {
     ptr->print();
+}
+
+Iterator Tree::findByValue(const std::string& value)
+{
+    for (auto it = this->begin(), end = this->end(); it != end; ++it)
+        if (it->value == value)
+            return it;
+    return this->end();
+}
+
+Iterator Tree::findByTag(const std::string& tag)
+{
+    for (auto it = this->begin(), end = this->end(); it != end; ++it)
+        if (it->tag == tag)
+            return it;
+    return this->end();
 }

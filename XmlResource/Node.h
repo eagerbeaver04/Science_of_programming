@@ -20,7 +20,6 @@ public:
     int numberInChildren(Node* element);
     Node* begin();
     Node* end();
-
     void print();
 
 };
