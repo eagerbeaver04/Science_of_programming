@@ -18,8 +18,12 @@ int main()
         std::cout << std::endl;
         res.findByTag("BODY").print();
         std::cout << std::endl;
-        for (auto it = res.findByValue("4"), end = res.findByTag("BODY"); it != end; ++it)
+        auto iter = res.findByValue("10");
+        std::unique_ptr<Node> b = std::make_unique<Node>("b", "11");
+        res.add(iter, std::move(b));
+        for (auto it = res.begin(), end = res.rend(); it != end; ++it)
             it->print();
+ 
     }
     catch(const std::runtime_error& err)
     {

@@ -35,7 +35,7 @@ void Tree::print()
     std::cout << toString() << std::endl;
 }
 
-void Tree::forEach(std::function<void(const Node&)> function)
+void Tree::forEach(const std::function<void(const Node&)>& function)
 {
     root->forEach(function);
 }
@@ -73,26 +73,25 @@ std::string Tree::getNextValue(const std::string& str, int& pos)
 
 std::string Tree::toString()
 {
-    return root->children[0]->toString(0);
+    return getRoot()->toString(0);
 }
 
 void Iterator::next()
 {
-
     Node* father = nullptr;
     father = root->findParent(ptr);
 
     if (father != nullptr)
     {
         int i = father->numberInChildren(ptr);
-        if (i == father->children.size() - 1)
+        if (i == father->getChildren().size() - 1)
         {
             ptr = father;
             return;
         }
         else
         {
-            ptr = father->children[i + 1].get()->begin();
+            ptr = father->getChildren()[i+1].get()->begin();
             return;
         }
         father = root->findParent(ptr);
@@ -109,7 +108,7 @@ void Iterator::print()
 Iterator Tree::findByValue(const std::string& value)
 {
     for (auto it = this->begin(), end = this->end(); it != end; ++it)
-        if (it->value == value)
+        if (it->getValue() == value)
             return it;
     return this->end();
 }
@@ -117,7 +116,33 @@ Iterator Tree::findByValue(const std::string& value)
 Iterator Tree::findByTag(const std::string& tag)
 {
     for (auto it = this->begin(), end = this->end(); it != end; ++it)
-        if (it->tag == tag)
+        if (it->getTag() == tag)
             return it;
     return this->end();
 }
+
+bool Iterator::find(const std::function<bool(Node* node)>& function)
+{
+    return function(ptr);
+}
+
+Iterator Tree::find(const std::function<bool (Node* node)>& function)
+{
+    for (auto it = this->begin(), end = this->end(); it != end; ++it)
+        if (it.find(function))
+            return it;
+    return this->end();
+}
+
+void Iterator::add(std::unique_ptr<Node> node)
+{
+    this->ptr->push(std::move(node));
+}
+
+Iterator Tree::add(Iterator it, std::unique_ptr<Node> node)
+{
+    it.add(std::move(node));
+    return Iterator(getRoot(), node.get());
+}
+
+

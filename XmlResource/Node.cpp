@@ -70,3 +70,18 @@ void Node::print()
 {
     std::cout << tag << " value : " << value << std::endl;
 }
+
+std::string Node::getValue()
+{
+    return value;
+}
+
+std::string Node::getTag()
+{
+    return tag;
+}
+
+std::vector<std::unique_ptr<Node>>& Node::getChildren()
+{
+    return children;
+}
