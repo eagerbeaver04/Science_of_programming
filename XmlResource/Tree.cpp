@@ -85,12 +85,8 @@ Iterator Tree::findByValue(const std::string& value)
 Iterator Tree::findByTag(const std::string& tag)
 {
     for (auto it = this->begin(), end = this->end(); it != end; ++it)
-    {
         if (it->getTag() == tag)
-        {
             return it;
-        }
-    }
     return this->rend();
 }
 
