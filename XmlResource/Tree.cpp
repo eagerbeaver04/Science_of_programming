@@ -10,7 +10,7 @@ void Tree::parse(const std::string& str)
 
 void Tree::load(const std::string& path)
 {
-       std::ifstream file(path);
+    std::ifstream file(path);
     if (!file)
         throw std::runtime_error("File not found\n");
     std::string line, result = "";
@@ -37,7 +37,7 @@ void Tree::print()
 
 void Tree::forEach(const std::function<void(const Node&)>& function)
 {
-    root->forEach(function);
+    getRoot()->forEach(function);
 }
 
 std::unique_ptr<Node> Tree::parseNode(const std::string& str, int& pos)
@@ -110,7 +110,7 @@ bool Tree::erase(Iterator it)
 {
     if (it == Iterator(root.get(), root.get()))
         return false;
-    if (it == end())
+    if (it == Iterator(getRoot(), getRoot()))
         return false;
     return it.erase();
 }

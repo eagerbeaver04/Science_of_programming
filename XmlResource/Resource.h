@@ -4,11 +4,11 @@
 class Resource
 {
 private:
-	Tree tree;
-	Resource() = default;
-	~Resource() = default;
+	std::unique_ptr<Tree> tree;
+	Resource() : tree(std::make_unique<Tree>()) {};
 public:
-	static Resource& create();
+	static std::unique_ptr<Resource> create();
+
 	void load(const std::string& path);
 	void save(const std::string& path);	
 	void print();
@@ -21,6 +21,8 @@ public:
 	Iterator find(const std::function<bool(Node* node)>& function);
 	Iterator add(Iterator it, std::unique_ptr<Node> node);
 	bool erase(Iterator it);
+
+	~Resource() = default;
 	Resource(const Resource&) = delete;
 	Resource(Resource&&) = delete;
 	Resource& operator = (const Resource&) = delete;

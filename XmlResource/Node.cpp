@@ -54,8 +54,7 @@ int Node::numberInChildren(Node* element)
 
 Node* Node::begin()
 {
-    Node* father = new Node("", "");
-    father = this;
+    Node* father = this;
     while (father->children.size() != 0)
         father = father->children[0].get();
     return father;
