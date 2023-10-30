@@ -8,8 +8,7 @@ void Iterator::next()
         ptr = tmp;
         return;
     }
-    else if(ptr)
-        ptr = nullptr;
+    ptr = nullptr;
 }
 
 void Iterator::print()
