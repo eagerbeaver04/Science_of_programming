@@ -2,26 +2,14 @@
 
 void Iterator::next()
 {
-    Node* father = nullptr;
-    father = root->findParent(ptr);
-
-    if (father != nullptr)
+    Node* tmp = ptr->next();
+    if (tmp)
     {
-        int i = father->numberInChildren(ptr);
-        if (i == father->getChildren().size() - 1)
-        {
-            ptr = father;
-            return;
-        }
-        else
-        {
-            ptr = father->getChildren()[i + 1].get()->begin();
-            return;
-        }
-        father = root->findParent(ptr);
+        ptr = tmp;
+        return;
     }
-    ptr = root->end();
-    father = nullptr;
+    else if(ptr)
+        ptr = nullptr;
 }
 
 void Iterator::print()
@@ -34,23 +22,15 @@ bool Iterator::find(const std::function<bool(Node* node)>& function)
     return function(ptr);
 }
 
-void Iterator::add(std::unique_ptr<Node> node)
+Iterator Iterator::add(const std::string& tag, const std::string& value)
 {
+    std::unique_ptr<Node> node = std::make_unique<Node>(tag, value, ptr);
+    Iterator tmp (node.get(), root);
     this->ptr->push(std::move(node));
+    return tmp;
 }
 
-bool Iterator::erase()
+void Iterator::erase()
 {
-    std::vector <std::unique_ptr<Node>>& tmp = ptr->getChildren();
-    std::vector <std::unique_ptr<Node>>& parent_children = root->findParent(ptr)->getChildren();
-    for (int i = 0; i < tmp.size(); i++)
-        parent_children.push_back(std::move(tmp[i]));
-    for (int i = 0; i < parent_children.size(); i++)
-        if (parent_children[i].get() == ptr)
-        {
-            parent_children[i].reset();
-            parent_children.erase(parent_children.begin() + i);
-            break;
-        }
-    return true;
+    ptr->addChildrenToParent();
 }

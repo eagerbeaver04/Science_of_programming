@@ -23,27 +23,6 @@ void Node::forEach(std::function<void(const Node&)> function)
         child->forEach(function);
 }
 
-Node* Node::findParent(Node* element) 
-{
-    int length = children.size();
-    if (length == 0)
-        return nullptr;
-    for (int i = 0; i < length; i++)
-    {
-        if (children[i].get() == element)
-            return this;
-        else
-        {
-            Node* node = children[i].get()->findParent(element);
-            if (node != nullptr)
-                return node;
-            node = nullptr;
-            continue;
-        }
-    }
-    return nullptr;
-}
-
 int Node::numberInChildren(Node* element) const 
 {
     for (int i = 0; i < children.size(); i++)
@@ -60,9 +39,14 @@ Node* Node::begin()
     return father;
 }
 
-Node* Node::end()
+Node* Node::rend()
 {
     return this;
+}
+
+Node* Node::end()
+{
+    return nullptr;
 }
 
 void Node::print() const
@@ -80,7 +64,40 @@ std::string Node::getTag() const
     return tag;
 }
 
-std::vector<std::unique_ptr<Node>>& Node::getChildren()
+Node* Node::next()
 {
-    return children;
+    Node* father = parent;
+    Node* ptr = this;
+    if (father != nullptr)
+    {
+        int i = father->numberInChildren(this);
+        if (i == father->children.size() - 1)
+            return father;
+        else
+            return father->children[i + 1].get()->begin();
+        father = father->parent;
+    }
+    return nullptr;
+}
+
+void Node::addChildrenToParent()
+{
+    for (int i = 0; i < children.size(); i++)
+    {
+        children[i]->parent = parent;
+        parent->children.push_back(std::move(children[i]));
+    }
+    clearThisFromParent();
+}
+
+void Node::clearThisFromParent()
+{
+    std::vector<std::unique_ptr<Node>>& tmp = parent->children;
+    for (int i = 0; i < tmp.size(); i++)
+        if (tmp[i].get() == this)
+        {
+            tmp[i].reset();
+            tmp.erase(tmp.begin() + i);
+            break;
+        }
 }

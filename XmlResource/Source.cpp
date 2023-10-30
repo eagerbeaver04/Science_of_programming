@@ -17,10 +17,11 @@ int main()
 	res->findByTag("BODY").print();
 	std::cout << std::endl;
 	auto iter = res->findByValue("10");
-	std::unique_ptr<Node> b = std::make_unique<Node>("b", "11");
-	res->add(iter, std::move(b));
-	iter = res->findByTag("BODY");
+	res->add(iter, "b", "11");
 	res->print();
+	iter = res->findByTag("BODY");
 	res->erase(iter);
 	res->print();
+
+	return 0;
 };

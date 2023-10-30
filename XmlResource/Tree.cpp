@@ -3,9 +3,7 @@
 void Tree::parse(const std::string& str)
 {
     int pos = 0;
-    root = std::move(std::make_unique<Node>("", ""));
-    std::unique_ptr<Node> root1 =  parseNode(str, pos);
-    root->push(std::move(root1));
+    root=parseNode(str, pos, nullptr);
 }
 
 void Tree::load(const std::string& path)
@@ -37,19 +35,19 @@ void Tree::print()
 
 void Tree::forEach(const std::function<void(const Node&)>& function)
 {
-    getRoot()->forEach(function);
+    root->forEach(function);
 }
 
-std::unique_ptr<Node> Tree::parseNode(const std::string& str, int& pos)
+std::unique_ptr<Node> Tree::parseNode(const std::string& str, int& pos, Node* parent)
 {
     std::string tag = getNextTag(str, pos);
     std::string value = getNextValue(str, pos);
-    std::unique_ptr<Node> node(new Node( tag, value));
+    std::unique_ptr<Node> node(new Node(tag, value, parent));
     std::string next_tag = getNextTag(str, pos);
     while (next_tag != ("/" + tag) && pos < str.size())
     {
         pos -= next_tag.size() + 2;
-        node->push(parseNode(str, pos));
+        node->push(parseNode(str, pos, node.get()));
         next_tag = getNextTag(str, pos);
     }
     return node;
@@ -73,7 +71,7 @@ std::string Tree::getNextValue(const std::string& str, int& pos)
 
 std::string Tree::toString() 
 {
-    return getRoot()->toString(0);
+    return root->toString(0);
 }
 
 Iterator Tree::findByValue(const std::string& value)
@@ -81,15 +79,19 @@ Iterator Tree::findByValue(const std::string& value)
     for (auto it = this->begin(), end = this->end(); it != end; ++it)
         if (it->getValue() == value)
             return it;
-    return this->end();
+    return this->rend();
 }
 
 Iterator Tree::findByTag(const std::string& tag)
 {
     for (auto it = this->begin(), end = this->end(); it != end; ++it)
+    {
         if (it->getTag() == tag)
+        {
             return it;
-    return this->end();
+        }
+    }
+    return this->rend();
 }
 
 Iterator Tree::find(const std::function<bool (Node* node)>& function)
@@ -97,21 +99,21 @@ Iterator Tree::find(const std::function<bool (Node* node)>& function)
     for (auto it = this->begin(), end = this->end(); it != end; ++it)
         if (it.find(function))
             return it;
-    return this->end();
+    return this->rend();
 }
 
-Iterator Tree::add(Iterator& it, std::unique_ptr<Node> node)
+Iterator Tree::add(Iterator& it, const std::string& tag, const std::string& value)
 {
-    it.add(std::move(node));
-    return Iterator(getRoot(), node.get());
+   return it.add(tag, value);
 }
 
 bool Tree::erase(Iterator& it)
 {
     if (it == Iterator(root.get(), root.get()))
         return false;
-    if (it == Iterator(getRoot(), getRoot()))
+    if (it == Iterator(nullptr,nullptr))
         return false;
-    return it.erase();
+    it.erase();
+    return true;
 }
  

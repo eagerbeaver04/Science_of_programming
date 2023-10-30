@@ -25,7 +25,7 @@ public:
 	friend bool operator == (const Iterator& a, const Iterator& b) { return (a.ptr == b.ptr) && (a.root == b.root); };
 	friend bool operator != (const Iterator& a, const Iterator& b) { return (a.ptr != b.ptr) || (a.root != b.root); };
 	bool find(const std::function<bool(Node* node)>& function);
-	void add(std::unique_ptr<Node>);
-	bool erase();
+	Iterator add(const std::string& tag, const std::string& value);
+	void erase();
 	void print();
 };

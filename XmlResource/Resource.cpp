@@ -50,9 +50,9 @@ Iterator Resource::find(const std::function<bool(Node* node)>& function)
 	return tree->find(function);
 }
 
-Iterator Resource::add(Iterator& it, std::unique_ptr<Node> node)
+Iterator Resource::add(Iterator& it, const std::string& tag, const std::string& value)
 {
-	return tree->add(it, std::move(node));
+	return tree->add(it, tag, value);
 }
 
 bool Resource::erase(Iterator&  it)
