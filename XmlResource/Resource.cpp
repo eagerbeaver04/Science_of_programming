@@ -15,7 +15,7 @@ void Resource::save(const std::string& path)
 	tree->save(path);
 }
 
-void Resource::print()
+void Resource::print() 
 {
 	tree->print();
 }
@@ -50,12 +50,12 @@ Iterator Resource::find(const std::function<bool(Node* node)>& function)
 	return tree->find(function);
 }
 
-Iterator Resource::add(Iterator it, std::unique_ptr<Node> node)
+Iterator Resource::add(Iterator& it, std::unique_ptr<Node> node)
 {
 	return tree->add(it, std::move(node));
 }
 
-bool Resource::erase(Iterator it)
+bool Resource::erase(Iterator&  it)
 {
 	return tree->erase(it);
 }

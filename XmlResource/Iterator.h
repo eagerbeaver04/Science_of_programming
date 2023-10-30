@@ -11,6 +11,9 @@ private:
 
 	pointer ptr;
 	pointer root;
+	// There are raw pointers because instance of Iterator class does not manage objects.
+	//These pointers are needed only for enumaration. 
+	//Also these fields are private and this fact prohibit extern access.
 
 	void next();
 public:

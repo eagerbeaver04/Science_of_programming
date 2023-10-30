@@ -15,14 +15,14 @@ public:
     Node(const std::string& tag, const std::string& value) : tag(tag), value(value) {};
 
     void push(std::unique_ptr<Node> child);
-    std::string toString(int depth);
+    std::string toString(int depth) const;
     void forEach(std::function<void(const Node&)> function);
     Node* findParent(Node* element);
-    int numberInChildren(Node* element);
+    int numberInChildren(Node* element) const;
     Node* begin();
     Node* end();
-    void print();
-    std::string getValue();
-    std::string getTag();
+    void print() const;
+    std::string getValue() const;
+    std::string getTag() const;
     std::vector<std::unique_ptr<Node>>& getChildren();
 };

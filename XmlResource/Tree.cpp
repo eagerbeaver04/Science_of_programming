@@ -30,7 +30,7 @@ void Tree::save(const std::string& path)
     file << toString();
 }
 
-void Tree::print()
+void Tree::print() 
 {
     std::cout << toString() << std::endl;
 }
@@ -71,7 +71,7 @@ std::string Tree::getNextValue(const std::string& str, int& pos)
     return str.substr(start, pos - start);
 }
 
-std::string Tree::toString()
+std::string Tree::toString() 
 {
     return getRoot()->toString(0);
 }
@@ -100,13 +100,13 @@ Iterator Tree::find(const std::function<bool (Node* node)>& function)
     return this->end();
 }
 
-Iterator Tree::add(Iterator it, std::unique_ptr<Node> node)
+Iterator Tree::add(Iterator& it, std::unique_ptr<Node> node)
 {
     it.add(std::move(node));
     return Iterator(getRoot(), node.get());
 }
 
-bool Tree::erase(Iterator it)
+bool Tree::erase(Iterator& it)
 {
     if (it == Iterator(root.get(), root.get()))
         return false;

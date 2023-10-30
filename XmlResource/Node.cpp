@@ -5,7 +5,7 @@ void Node::push(std::unique_ptr<Node> child)
     children.push_back(std::move(child));
 }
 
-std::string Node::toString(int depth)
+std::string Node::toString(int depth) const
 {
     const std::string spaces = std::string(depth * 2, ' ');
     std::string result = "";
@@ -16,14 +16,14 @@ std::string Node::toString(int depth)
     return result;
 }
 
-void Node::forEach(std::function<void(const Node&)> function)
+void Node::forEach(std::function<void(const Node&)> function) 
 {
     function(*this);
-    for (const auto& child : children)
+    for (auto&& child : children)
         child->forEach(function);
 }
 
-Node* Node::findParent(Node* element)
+Node* Node::findParent(Node* element) 
 {
     int length = children.size();
     if (length == 0)
@@ -44,7 +44,7 @@ Node* Node::findParent(Node* element)
     return nullptr;
 }
 
-int Node::numberInChildren(Node* element)
+int Node::numberInChildren(Node* element) const 
 {
     for (int i = 0; i < children.size(); i++)
         if (element == children[i].get())
@@ -52,7 +52,7 @@ int Node::numberInChildren(Node* element)
     return -2;
 }
 
-Node* Node::begin()
+Node* Node::begin() 
 {
     Node* father = this;
     while (father->children.size() != 0)
@@ -65,17 +65,17 @@ Node* Node::end()
     return this;
 }
 
-void Node::print()
+void Node::print() const
 {
     std::cout << tag << " value : " << value << std::endl;
 }
 
-std::string Node::getValue()
+std::string Node::getValue() const 
 {
     return value;
 }
 
-std::string Node::getTag()
+std::string Node::getTag() const 
 {
     return tag;
 }

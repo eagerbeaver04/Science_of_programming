@@ -20,10 +20,10 @@ public:
 	Iterator rend() { return Iterator(getRoot()->end(), root.get()); }
 	Iterator end() { return Iterator(root.get()->end(), root.get()); }
 	Iterator find(const std::function<bool(Node* node)>& function);
-	Iterator add(Iterator it, std::unique_ptr<Node>);
+	Iterator add(Iterator& it, std::unique_ptr<Node>);
 	Iterator findByValue(const std::string& value);
 	Iterator findByTag(const std::string& tag);
-	bool erase(Iterator it);
+	bool erase(Iterator& it);
 };
 
 
