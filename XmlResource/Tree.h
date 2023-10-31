@@ -11,7 +11,7 @@ private:
     std::string getNextValue(const std::string& str, int& pos);
 public:
     void parse(const std::string& xml);
-    void load(const std::string& path);
+    bool load(const std::string& path);
     void save(const std::string& path);
     void print();
     void forEach(const std::function<void(const Node&)>& function);

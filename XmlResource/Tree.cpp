@@ -3,14 +3,26 @@
 void Tree::parse(const std::string& str)
 {
     int pos = 0;
-    root=parseNode(str, pos, nullptr);
+    try
+    {
+        root = parseNode(str, pos, nullptr);
+    }
+    catch(std::runtime_error err)
+    {
+        std::cerr << err.what();
+        std::unique_ptr<Node> tmp(new Node("HEAD", "", nullptr));
+        root = std::move(tmp);
+    }
 }
 
-void Tree::load(const std::string& path)
+bool Tree::load(const std::string& path)
 {
     std::ifstream file(path);
     if (!file)
-        throw std::runtime_error("File not found\n");
+    {
+        std::cerr << "File not found" << std::endl;
+        return false;
+    }
     std::string line, result = "";
     while (std::getline(file, line))
         result += line;
@@ -18,13 +30,14 @@ void Tree::load(const std::string& path)
     result.erase(it, result.end());
 
     parse(result);
+    return true;
 }
 
 void Tree::save(const std::string& path)
 {
     std::ofstream file(path);
     if (!file)
-        throw std::runtime_error("File not found\n");
+        return;
     file << toString();
 }
 
@@ -47,9 +60,12 @@ std::unique_ptr<Node> Tree::parseNode(const std::string& str, int& pos, Node* pa
     while (next_tag != ("/" + tag) && pos < str.size())
     {
         pos -= next_tag.size() + 2;
+        if (pos == -1)
+            throw std::runtime_error("tags were mismatched");
         node->push(parseNode(str, pos, node.get()));
         next_tag = getNextTag(str, pos);
     }
+
     return node;
 }
 

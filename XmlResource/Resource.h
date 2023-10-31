@@ -9,7 +9,7 @@ private:
 public:
 	static std::unique_ptr<Resource> create();
 
-	void load(const std::string& path);
+	bool load(const std::string& path);
 	void save(const std::string& path);	
 	void print();
 

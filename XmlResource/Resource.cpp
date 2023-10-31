@@ -5,9 +5,9 @@ std::unique_ptr<Resource> Resource::create()
 	return std::unique_ptr<Resource>(new Resource());
 }
 
-void Resource::load(const std::string& path)
+bool Resource::load(const std::string& path)
 {
-	tree->load(path);
+	return tree->load(path);
 }
 
 void Resource::save(const std::string& path)
