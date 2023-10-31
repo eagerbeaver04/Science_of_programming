@@ -90,14 +90,6 @@ Iterator Tree::findByTag(const std::string& tag)
     return this->rend();
 }
 
-Iterator Tree::find(const std::function<bool (Node* node)>& function)
-{
-    for (auto it = this->begin(), end = this->end(); it != end; ++it)
-        if (it.find(function))
-            return it;
-    return this->rend();
-}
-
 Iterator Tree::add(Iterator& it, const std::string& tag, const std::string& value)
 {
    return it.add(tag, value);

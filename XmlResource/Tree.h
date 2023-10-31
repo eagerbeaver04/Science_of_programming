@@ -18,7 +18,6 @@ public:
 	Iterator begin() { return Iterator(root->begin(), root.get()); }
 	Iterator rend() { return Iterator(root->rend(), root.get()); }
 	Iterator end() { return Iterator(root->end(), root.get()); }
-	Iterator find(const std::function<bool(Node* node)>& function);
 	Iterator add(Iterator& it, const std::string& tag, const std::string& value);
 	Iterator findByValue(const std::string& value);
 	Iterator findByTag(const std::string& tag);

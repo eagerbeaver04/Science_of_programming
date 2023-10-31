@@ -16,11 +16,6 @@ void Iterator::print()
     ptr->print();
 }
 
-bool Iterator::find(const std::function<bool(Node* node)>& function)
-{
-    return function(ptr);
-}
-
 Iterator Iterator::add(const std::string& tag, const std::string& value)
 {
     std::unique_ptr<Node> node = std::make_unique<Node>(tag, value, ptr);

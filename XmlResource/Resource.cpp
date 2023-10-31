@@ -45,11 +45,6 @@ Iterator Resource::findByValue(const std::string& value)
 	return tree->findByValue(value);
 }
 
-Iterator Resource::find(const std::function<bool(Node* node)>& function)
-{
-	return tree->find(function);
-}
-
 Iterator Resource::add(Iterator& it, const std::string& tag, const std::string& value)
 {
 	return tree->add(it, tag, value);

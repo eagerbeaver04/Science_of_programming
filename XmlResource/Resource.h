@@ -18,7 +18,6 @@ public:
 	Iterator rend();
 	Iterator findByTag(const std::string& tag);
 	Iterator findByValue(const std::string& value);
-	Iterator find(const std::function<bool(Node* node)>& function);
 	Iterator add(Iterator& it, const std::string& tag, const std::string& value);
 	bool erase(Iterator& it);
 

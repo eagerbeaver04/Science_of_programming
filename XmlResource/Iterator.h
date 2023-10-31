@@ -24,7 +24,6 @@ public:
 	Iterator& operator++(int i) { Iterator tmp = *this; ++(*this); return tmp; };
 	friend bool operator == (const Iterator& a, const Iterator& b) { return (a.ptr == b.ptr) && (a.root == b.root); };
 	friend bool operator != (const Iterator& a, const Iterator& b) { return (a.ptr != b.ptr) || (a.root != b.root); };
-	bool find(const std::function<bool(Node* node)>& function);
 	Iterator add(const std::string& tag, const std::string& value);
 	void erase();
 	void print();
