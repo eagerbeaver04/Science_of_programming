@@ -13,15 +13,21 @@ void Iterator::next()
 
 void Iterator::print()
 {
-    ptr->print();
+    if(ptr)
+        ptr->print();
 }
 
 Iterator Iterator::add(const std::string& tag, const std::string& value)
 {
-    std::unique_ptr<Node> node = std::make_unique<Node>(tag, value, ptr);
-    Iterator tmp (node.get(), root);
-    this->ptr->push(std::move(node));
-    return tmp;
+    if (ptr)
+    {
+        std::unique_ptr<Node> node = std::make_unique<Node>(tag, value, ptr);
+        Iterator tmp(node.get(), root);
+        this->ptr->push(std::move(node));
+        return tmp;
+    }
+    std::cerr << "Invalid operation" << std::endl;
+    return *this;
 }
 
 void Iterator::erase()

@@ -9,9 +9,7 @@ void Tree::parse(const std::string& str)
     }
     catch(std::runtime_error err)
     {
-        std::cerr << err.what();
-        std::unique_ptr<Node> tmp(new Node("HEAD", "", nullptr));
-        root = std::move(tmp);
+        std::cerr << err.what() << std::endl;
     }
 }
 
