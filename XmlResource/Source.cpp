@@ -25,4 +25,4 @@ int main()
 		res->print();
 	}
 	return 0;
-};
+}

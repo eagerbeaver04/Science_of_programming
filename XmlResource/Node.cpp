@@ -101,3 +101,18 @@ void Node::clearThisFromParent()
             break;
         }
 }
+
+Iterator Node::createIteratorBegin()
+{
+    return Iterator(this->begin(), this);
+}
+
+Iterator Node::createIteratorEnd()
+{
+    return Iterator(this->end(), this);
+}
+
+Iterator Node::createIteratorRend()
+{
+    return Iterator(this->rend(), this);
+}
