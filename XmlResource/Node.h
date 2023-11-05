@@ -17,11 +17,11 @@ private:
     //There is raw pointer because child does not manage parent. 
     // Only parent manage his children.
     //Also this field is private and this fact prohibit extern access.
-    int numberInChildren(Node* element) const;
-    void clearThisFromParent();
     Node* begin();
     Node* end();
     Node* rend();
+    int numberInChildren(Node* element) const;
+    void clearThisFromParent();
 public:
     Node(const std::string& tag, const std::string& value, Node* parent_ = nullptr) : tag(tag), value(value), parent(parent_) {};
     void push(std::unique_ptr<Node> child);
@@ -35,7 +35,9 @@ public:
     std::string getValue() const;
     std::string getTag() const;
     void addChildrenToParent();
+
 };
+
 
 
 class Iterator
@@ -66,4 +68,3 @@ public:
     void erase();
     void print();
 };
-
