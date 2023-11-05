@@ -2,13 +2,7 @@
 
 void Iterator::next()
 {
-    Node* tmp = ptr->next();
-    if (tmp)
-    {
-        ptr = tmp;
-        return;
-    }
-    ptr = nullptr;
+    ptr = ptr->next();
 }
 
 void Iterator::print()
