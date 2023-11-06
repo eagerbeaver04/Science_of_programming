@@ -27,7 +27,7 @@ public:
     void push(std::unique_ptr<Node> child);
     std::string toString(int depth) const;
     void forEach(std::function<void(const Node&)> function);
-    Node* next();
+    void next(Iterator& it);
     Iterator createIteratorBegin();
     Iterator createIteratorEnd();
     Iterator createIteratorRend();
@@ -58,6 +58,7 @@ private:
     void next();
 public:
     Iterator(pointer ptr_, pointer root_) : ptr(ptr_), root(root_) {};
+    void setValue(Node* node) { ptr = node; };
     reference operator*() { return *ptr; };
     pointer operator ->() { return ptr; };
     Iterator operator++ () { next(); return *this; };

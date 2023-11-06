@@ -2,7 +2,7 @@
 
 void Iterator::next()
 {
-    ptr = ptr->next();
+    ptr->next(*this);
 }
 
 void Iterator::print()

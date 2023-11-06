@@ -64,22 +64,6 @@ std::string Node::getTag() const
     return tag;
 }
 
-Node* Node::next()
-{
-    Node* father = parent;
-    Node* ptr = this;
-    if (father != nullptr)
-    {
-        int i = father->numberInChildren(this);
-        if (i == father->children.size() - 1)
-            return father;
-        else
-            return father->children[i + 1].get()->begin();
-        father = father->parent;
-    }
-    return nullptr;
-}
-
 void Node::addChildrenToParent()
 {
     for (int i = 0; i < children.size(); i++)
@@ -115,4 +99,18 @@ Iterator Node::createIteratorEnd()
 Iterator Node::createIteratorRend()
 {
     return Iterator(this->rend(), this);
+}
+
+void Node::next(Iterator& it)
+{ 
+    Node* tmp = nullptr;
+    if (parent != nullptr)
+    {
+        int i = parent->numberInChildren(this);
+        if (i == parent->children.size() - 1)
+            tmp = parent;
+        else
+            tmp = parent->children[i + 1].get()->begin();
+    }
+    it.setValue(tmp); 
 }
