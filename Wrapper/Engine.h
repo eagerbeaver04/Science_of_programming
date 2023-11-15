@@ -9,8 +9,8 @@ private:
     std::unordered_map<std::string, std::function<int(argumentList)>> commands;
 
 public:
-    template <typename T, typename... Pairs>
-    void registerCommand(Wrapper<T, Pairs...> *instance, const std::string &name)
+    template <typename T,typename F, typename... Pairs>
+    void registerCommand(Wrapper<T,F, Pairs...> *instance, const std::string &name)
     {
         commands[name] = [instance](const argumentList &arguments)
         {
