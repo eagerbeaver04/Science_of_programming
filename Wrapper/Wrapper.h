@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <functional>
+#include <tuple>
 
 
 template<typename T, typename... Pairs>
@@ -29,6 +30,17 @@ public:
 	{
 		for (auto&& pair : arguments_)
 			values.push_back(pair.second);
+	}
+	auto execute(const argumentsList& arguments_)
+	{
+		auto it = arguments_.begin();
+		for (int i = 0; i < values.size(); i++)
+		{
+			values[i] = it->second;
+			it++;
+		}
+
+		return execute(std::make_index_sequence<sizeof...(Pairs)>{});
 	}
 
 };

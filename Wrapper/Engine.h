@@ -12,7 +12,11 @@ public:
 	{
 		commands[name] = [instance](const argumentList& arguments)
 		{
-			return instance(arguments);
+			return instance->execute(arguments);
 		};
+	}
+	auto execute(const std::string& name, const argumentList& arguments)
+	{
+		return (commands.find(name)->second)(arguments);
 	}
 };
