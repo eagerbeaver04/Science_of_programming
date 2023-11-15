@@ -11,11 +11,11 @@ bool defaultValue(const T& value)
     return T();
 }
 
-template <typename T, typename... Pairs>
+template <typename T, typename F, typename... Pairs>
 class Wrapper
 {
 private:
-    using Fptr = int (T::*)(Pairs...);
+    using Fptr = F(T::*)(Pairs...);
     using argumentsList = std::unordered_map<std::string, int>;
     T* instancePointer;
     Fptr methodPointer;
