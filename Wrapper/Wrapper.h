@@ -7,7 +7,8 @@
 #include <type_traits>
 
 template <typename T, typename... Ts>
-struct unique {
+struct unique 
+{
     using type = T;
 };
 
