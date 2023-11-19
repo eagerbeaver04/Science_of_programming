@@ -7,7 +7,7 @@ class Engine
 private:
     using ArgumentUniqueType = variant_t<Pairs...>;
     using ArgumentsList = std::unordered_map<std::string, ArgumentUniqueType>;
-    std::unordered_map<std::string, std::function<F(ArgumentsList)>> commands;
+    std::unordered_map<std::string, std::function<F(const ArgumentsList&)>> commands;
 
 public:
     Engine(Wrapper<T, F, Pairs...>* instance) {};
