@@ -1,40 +1,41 @@
-#pragma once
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <functional>
 #include <variant>
+#include <vector>
+#include <type_traits>
 
-template <typename T>
-bool defaultValue(const T& value) 
-{
-    return T();
-}
+template <typename T, typename... Ts>
+struct unique {
+    using type = T;
+};
+
+template <typename... Ts, typename U, typename... Us>
+struct unique<std::variant<Ts...>, U, Us...>
+    : std::conditional_t<(std::is_same_v<U, Ts> || ...),
+    unique<std::variant<Ts...>, Us...>,
+    unique<std::variant<Ts..., U>, Us...>> {};
+
+template <typename... Ts>
+using variant_t = typename unique<std::variant<>, Ts...>::type;
 
 template <typename T, typename F, typename... Pairs>
 class Wrapper
 {
 private:
     using Fptr = F(T::*)(Pairs...);
-    using argumentsList = std::unordered_map<std::string, int>;
+    using ArgumentUniqueType = variant_t<Pairs...>;
+    using ArgumentsList = std::unordered_map<std::string, ArgumentUniqueType>;
     T* instancePointer;
     Fptr methodPointer;
-    argumentsList arguments;
+    ArgumentsList arguments;
 
-    std::vector<decltype(arguments.begin()->second)> values;
-
-    template <std::size_t... Is>
-    auto calculate(std::index_sequence<Is...>)
-    {
-        auto value = (instancePointer->*methodPointer)(values[Is]...);
-        for (auto&& el : values)
-            el = defaultValue(el);
-        return value;
-    };
+    std::vector<ArgumentUniqueType> values;
 
 public:
-    Wrapper(T* instancePointer_, Fptr methodPointer_, argumentsList arguments_) : instancePointer(instancePointer_),
-        methodPointer(methodPointer_)
+    Wrapper(T* instancePointer_, Fptr methodPointer_, const ArgumentsList& arguments_)
+        : instancePointer(instancePointer_), methodPointer(methodPointer_), arguments(arguments_)
     {
         for (auto&& pair : arguments_)
         {
@@ -43,7 +44,13 @@ public:
         }
     }
 
-    auto execute(const argumentsList& arguments_)
+    template <std::size_t... Is>
+    auto calculate(std::index_sequence<Is...>)
+    {
+        return (instancePointer->*methodPointer)(std::get<Pairs>(values[Is])...);
+    }
+
+    auto execute(const ArgumentsList& arguments_)
     {
         auto itStoreBegin = arguments.begin();
         auto itStoreEnd = arguments.end();
@@ -55,7 +62,7 @@ public:
             if (itStore == itStoreEnd)
             {
                 std::cerr << "Undefined argument" << std::endl;
-                return 0;
+                return F();
             }
             values[std::distance(itStoreBegin, itStore)] = itInput->second;
             itInput++;
