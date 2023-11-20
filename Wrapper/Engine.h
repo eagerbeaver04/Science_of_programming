@@ -1,6 +1,6 @@
 #pragma once
-
 #include "Wrapper.h"
+
 template <typename T, typename F, typename... Pairs>
 class Engine
 {
@@ -21,6 +21,10 @@ public:
 
     auto execute(const std::string& name, const ArgumentsList& arguments)
     {
-        return (commands.find(name)->second)(arguments);
+        auto it = commands.find(name);
+        if (it != commands.end())
+            return (it->second)(arguments);
+        std::cerr << "Undefined command name" << std::endl;
+        return F();
     }
 };

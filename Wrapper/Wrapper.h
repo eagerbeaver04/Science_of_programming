@@ -53,6 +53,11 @@ public:
 
     auto execute(const ArgumentsList& arguments_)
     {
+        if (values.size() != arguments_.size())
+        {
+            std::cerr << "Invalid number of arguments" << std::endl;
+            return F();
+        }
         auto itStoreBegin = arguments.begin();
         auto itStoreEnd = arguments.end();
         auto itInput = arguments_.begin();

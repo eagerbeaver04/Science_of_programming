@@ -23,7 +23,7 @@ int main()
     engine.registerCommand(&w1, "command1");
     engine.registerCommand(&w2, "command2");
 
-    std::cout << "(1+2.5+1)/3= " << engine.execute("command1", { {"arg1", 1}, {"arg2", 2.5}, {"arg3",1 } }) << std::endl;
+    std::cout << "(1+2.5+1)/3= " << engine.execute("command1", { {"arg1", 1}, {"arg2", 2.5}}) << std::endl;
 
     std::cout << "-1* (1+2.5+1)/3= " << engine.execute("command2", { {"arg1", 1}, {"arg2", 2.5}, {"arg3",1 } }) << std::endl;
 
