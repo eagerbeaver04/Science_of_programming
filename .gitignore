@@ -1,7 +1,8 @@
-Calculator.sln
-Calculator.vcxproj
-Calculator.vcxproj.filters
-Calculator.vcxproj.user
-.vs/
-x64/
-Debug/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+**/.vs/
+**/x64/
+**/Debug/
+**/.idea/
